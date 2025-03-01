@@ -1,6 +1,7 @@
 const express = require("express");
 const isAuthenticated = require('../middleware/auth');
-const  userController = require("../controllers/user/userController");
+const userController = require("../controllers/user/userController");
+const homeController = require("../controllers/home/homeController");
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.all('/login', userController.allLogin);
 router.get('/logout', userController.logout);
 
 //Protected Routes
+router.get('/home', isAuthenticated, homeController.homepage);
 
 
 
