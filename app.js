@@ -1,18 +1,25 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const cors = require("cors");
 const connectDB = require("./server/config/db");
-const authRoutes = require("./server/routes/authRoutes");
+const userRoutes = require("./server/routes/userRoutes");
+const expressLayouts = require('express-ejs-layouts');
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-app.use(cors());
+// Static Fields 
+app.use(express.static('public'));
+
+// Templating Engine   
+app.use(expressLayouts);
+app.set('layout', './layouts/main');
+app.set('view engine', 'ejs');
+
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+app.use("/", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
