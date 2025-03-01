@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./server/config/db");
-const userRoutes = require("./server/routes/userRoutes");
+const routes = require("./server/routes/routes");
 const expressLayouts = require('express-ejs-layouts');
 
 dotenv.config();
@@ -19,7 +19,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 
-app.use("/", userRoutes);
+app.use("/", routes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
