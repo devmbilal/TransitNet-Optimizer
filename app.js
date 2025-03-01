@@ -35,5 +35,10 @@ app.use(express.json());
 
 app.use("/", routes);
 
+// Handle 404
+app.get('*', (req, res) => {  
+    res.render('pages/error/404');
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

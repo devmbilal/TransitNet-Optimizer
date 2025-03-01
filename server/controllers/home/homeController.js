@@ -5,8 +5,8 @@ exports.homepage = async (req, res) => {
     const messages = req.flash('info');
 
     const locals = {
-        title: 'Admin Panel',
-        description: 'Smart Journey Planner-Road Safety Project',
+        title: 'TransitNet Optimizer',
+        description: 'Optimizing Public Transport Routes through data-driven insights for smarter, more efficient urban mobility.',
     }
 
     try {

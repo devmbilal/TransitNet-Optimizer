@@ -1,3 +1,4 @@
+
 body {
   font-size: .875rem;
 }
@@ -13,6 +14,7 @@ body {
 
 .sidebar {
   position: fixed;
+  background-color: #333;
   top: 0;
   /* rtl:raw:
   right: 0;
@@ -23,6 +25,30 @@ body {
   z-index: 100; /* Behind the navbar */
   padding: 48px 0 0; /* Height of navbar */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+#stopDropdown{
+margin: 1rem 0 1rem 0;  
+}
+
+.heading{
+  margin-top: 2rem;
+}
+.stopsec{
+  margin-top: 2rem;
+}
+.messages{
+  margin-top: 1rem;
+}
+.addbutton{
+  margin-top: 1rem;
+}
+.end-btn{
+  margin-top: 2rem;
+  display:flex;
+  align-items:center;
+}
+.h2{
+  color:#333;
 }
 
 @media (max-width: 767.98px) {
@@ -39,21 +65,23 @@ body {
 
 .sidebar .nav-link {
   font-weight: 500;
-  color: #333;
+  color:#333
 }
 
 .sidebar .nav-link .feather {
   margin-right: 4px;
-  color: #727272;
+  color: #2470dc;
 }
 
-.sidebar .nav-link.active {
-  color: #2470dc;
+.sidebar .nav-link:hover  {
+  /* color: #2470dc; */
+  background-color:rgb(200, 200, 200);
 }
 
 .sidebar .nav-link:hover .feather,
 .sidebar .nav-link.active .feather {
-  color: inherit;
+  /* color: inherit; */
+  background-color: rgb(144, 144, 144);
 }
 
 .sidebar-heading {
@@ -70,14 +98,16 @@ body {
   background-color: rgba(0, 0, 0, .25);
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 }
-
+.navbar{
+  align-items: center;
+}
 .navbar .navbar-toggler {
   top: .25rem;
   right: 1rem;
 }
 
 .navbar .form-control {
-  padding: .75rem 1rem;
+  padding: 0rem 1rem;
 }
 
 .navbar .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
