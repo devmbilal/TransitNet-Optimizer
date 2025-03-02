@@ -1,13 +1,23 @@
-<div class="messages">
-  <% messages.forEach(element => { %>
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <%= element %>
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-  </div>
-  <% }) %>
+<div class="py-4">
+  <h2>Islamabad Map</h2>
+  <div id="map" style="height: 500px"></div>
 </div>
+
+<!-- Include Leaflet JS and map initialization script -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Initialize the map centered on Islamabad
+  var map = L.map("map").setView([33.6844, 73.0479], 12); // Coordinates for Islamabad
+
+  // Add OpenStreetMap tiles
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:
+      '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  // Add a marker for Islamabad
+  L.marker([33.6844, 73.0479])
+    .addTo(map)
+    .bindPopup("Islamabad, Pakistan")
+    .openPopup();
+</script>
