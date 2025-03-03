@@ -3,27 +3,29 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-/* Interactive Heading */
+/* Interactive Heading (Smaller) */
 .interactive-heading {
+    margin-top: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #007bff, #00d4ff);
-    -webkit-background-clip: text;
-    color: transparent;
-    display: inline-flex;
-    gap: 10px;
-    padding: 5px 15px;
+    width: 100%;
+    text-align: center;
+    gap: 8px;
+    padding: 5px 10px;
+    margin-bottom: 2rem;
     border-radius: 10px;
-    animation: headingPulse 2s infinite;
+}
+
+.heading-bg {
+    background-color: #2C3E50; /* Deep slate blue for professional look */
 }
 
 .interactive-heading span {
     display: inline-block;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.interactive-heading:hover span {
-    transform: translateY(-5px);
-}
+
 
 @keyframes headingPulse {
     0% { opacity: 0.8; }
@@ -34,13 +36,14 @@ body {
 /* Rest of the styles */
 .card {
     border: none;
+    margin-top: 2rem;
     border-radius: 10px;
     transition: transform 0.2s;
 }
 
-.card:hover {
+/* .card:hover {
     transform: translateY(-5px);
-}
+} */
 
 .card-header {
     border-radius: 10px 10px 0 0;
