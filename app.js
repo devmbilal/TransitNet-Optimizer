@@ -5,6 +5,8 @@ const routes = require("./server/routes/routes");
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const flash = require('connect-flash');
+const fileUpload = require('express-fileupload');
+
 
 dotenv.config();
 connectDB();
@@ -24,6 +26,9 @@ app.use(session({
 
 // Static Fields 
 app.use(express.static('public'));
+
+// File Upload Middleware
+app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } })); // 50MB limit
 
 // Templating Engine   
 app.use(expressLayouts);

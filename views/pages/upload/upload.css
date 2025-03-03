@@ -1,0 +1,84 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Interactive Heading */
+.interactive-heading {
+    font-weight: 700;
+    background: linear-gradient(90deg, #007bff, #00d4ff);
+    -webkit-background-clip: text;
+    color: transparent;
+    display: inline-flex;
+    gap: 10px;
+    padding: 5px 15px;
+    border-radius: 10px;
+    animation: headingPulse 2s infinite;
+}
+
+.interactive-heading span {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.interactive-heading:hover span {
+    transform: translateY(-5px);
+}
+
+@keyframes headingPulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+/* Rest of the styles */
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0;
+}
+
+.alert {
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.form-select, 
+.form-control {
+    border-radius: 8px;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+}
+
+.list-group-item {
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+.form-text {
+    margin-top: 5px;
+}
+
+.card-title {
+    margin-bottom: 15px;
+}
+
+.text-muted {
+    font-size: 0.9em;
+}

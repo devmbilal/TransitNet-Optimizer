@@ -3,6 +3,7 @@ const isAuthenticated = require('../middleware/auth');
 const userController = require("../controllers/user/userController");
 const homeController = require("../controllers/home/homeController");
 const aboutController = require("../controllers/about/aboutController");
+const transportController = require("../controllers/transport/transportController");
 
 const router = express.Router();
 
@@ -19,6 +20,12 @@ router.get('/logout', userController.logout);
 router.get('/home', isAuthenticated, homeController.homepage);
 // About
 router.get('/about', aboutController.about);
+
+//Transport File Upload
+router.get('/upload', isAuthenticated, transportController.getUploadPage);
+router.get('/files', isAuthenticated, transportController.getFilesByRegion);
+router.post('/upload',isAuthenticated, transportController.uploadFiles);
+router.post('/delete/:region/:id',isAuthenticated, transportController.deleteFile);
 
 
 
