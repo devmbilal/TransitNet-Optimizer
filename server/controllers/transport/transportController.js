@@ -2,7 +2,7 @@ const TransportFile = require('../../models/transportFile/TransportFile');
 const { parse } = require('csv-parse/sync');
 
 // Static list of regions
-const STATIC_REGIONS = ['Islamabad', 'Lahore', 'Karachi', 'Rawalpindi', 'Faisalabad'];
+const STATIC_REGIONS = ['Islamabad', 'Lahore', 'Karachi', 'Faisalabad'];
 
 // Render upload page
 exports.getUploadPage = async (req, res) => {
