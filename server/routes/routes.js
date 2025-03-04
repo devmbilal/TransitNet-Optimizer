@@ -28,7 +28,6 @@ router.get('/files', isAuthenticated, transportController.getFilesByRegion);
 router.post('/upload',isAuthenticated, transportController.uploadFiles);
 router.post('/delete/:region/:id',isAuthenticated, transportController.deleteFile);
 
-
 //Visualization
 router.get('/visualization',isAuthenticated, visualizationController.getVisualizationPage);
 router.get('/visualization/files', isAuthenticated, visualizationController.getFilesByRegion);
