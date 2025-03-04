@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualization Dashboard</title>
+    <!-- Bootstrap CSS CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Leaflet CSS CDN -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/visualization.css" />
+  </head>
+  <body>
+    <div class="container-fluid p-0">
+      <!-- Main Heading -->
+      <h3
+        class="text-center py-2 interactive-heading heading-bg text-white mb-0"
+      >
+        <span>Public Routes and </span> <span>Mobility Data Visualization</span>
+      </h3>
+
+      <!-- Region Dropdown -->
+      <div class="p-3 select-region">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-geo-alt"></i> Select Region:
+              </span>
+              <select
+                class="form-select"
+                id="regionSelect"
+                onchange="fetchFiles(this.value)"
+              >
+                <option value="" selected disabled>Choose a region...</option>
+                <% regions.forEach(region => { %>
+                <option value="<%= region %>"><%= region %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Horizontal Pane: Transport Data and Filtration Options -->
+      <div class="horizontal-pane bg-light shadow-sm p-3">
+        <div class="row">
+          <!-- Transport Data Files -->
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <div class="card-header text-white files-heading">
+                <h5 class="mb-0">Transport Data Files</h5>
+              </div>
+              <div
+                class="card-body overflow-auto"
+                style="max-height: 150px"
+                id="transportFiles"
+              >
+                <h6 class="text-muted mb-3">Public Transport Files:</h6>
+                <% if (files && files.transportFiles.length > 0) { %> <%
+                files.transportFiles.forEach((file, index) => { %>
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input route-checkbox"
+                    type="checkbox"
+                    id="route<%= index %>"
+                    data-file="<%= file.fileName %>"
+                    data-color="<%= ['#FF0000', '#0000FF', '#008000', '#800080', '#FFA500', '#00CED1', '#FF4500', '#FFD700', '#6A5ACD', '#20B2AA', '#DC143C', '#32CD32', '#9932CC', '#FF69B4', '#00FF7F', '#4682B4', '#DAA520', '#8B008B', '#ADFF2F', '#4169E1'][index % 20] %>"
+                    onchange="toggleRoute(this)"
+                  />
+                  <label class="form-check-label" for="route<%= index %>">
+                    <%= file.fileName %>
+                  </label>
+                </div>
+                <% }) %> <% } else { %>
+                <p class="text-muted">No transport files available.</p>
+                <% } %>
+                <h6 class="text-muted mt-3 mb-3">Mobility File:</h6>
+                <% if (files && files.mobilityFile) { %>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="mobility"
+                    data-file="<%= files.mobilityFile.fileName %>"
+                    onchange="toggleMobility(this)"
+                  />
+                  <label class="form-check-label" for="mobility">
+                    <%= files.mobilityFile.fileName %>
+                  </label>
+                </div>
+                <% } else { %>
+                <p class="text-muted">No mobility file available.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtration Options with Checkboxes -->
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Filtration Options</h5>
+              </div>
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input filter-checkbox"
+                    type="checkbox"
+                    id="distance"
+                    onchange="applyFilters()"
+                  />
+                  <label class="form-check-label" for="distance"
+                    >Distance Calculation</label
+                  >
+                </div>
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input filter-checkbox"
+                    type="checkbox"
+                    id="travelDensity"
+                    onchange="applyFilters()"
+                  />
+                  <label class="form-check-label" for="travelDensity"
+                    >Travel Density</label
+                  >
+                </div>
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input filter-checkbox"
+                    type="checkbox"
+                    id="stopDensity"
+                    onchange="applyFilters()"
+                  />
+                  <label class="form-check-label" for="stopDensity"
+                    >Stop Density</label
+                  >
+                </div>
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input filter-checkbox"
+                    type="checkbox"
+                    id="routeOverlap"
+                    onchange="applyFilters()"
+                  />
+                  <label class="form-check-label" for="routeOverlap"
+                    >Route Overlap</label
+                  >
+                </div>
+                <button
+                  class="btn btn-primary w-100 mt-3"
+                  onclick="applyFilters()"
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full-Screen Map -->
+      <div class="map-container">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Map View</h5>
+          </div>
+          <div class="card-body p-0">
+            <div id="map" class="map-placeholder"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS CDN -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Custom JS -->
+    <script src="/js/visualization.js"></script>
+  </body>
+</html>

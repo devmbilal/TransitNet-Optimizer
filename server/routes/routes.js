@@ -4,6 +4,7 @@ const userController = require("../controllers/user/userController");
 const homeController = require("../controllers/home/homeController");
 const aboutController = require("../controllers/about/aboutController");
 const transportController = require("../controllers/transport/transportController");
+const visualizationController = require("../controllers/visualization/visualizationController");
 
 const router = express.Router();
 
@@ -26,6 +27,13 @@ router.get('/upload', isAuthenticated, transportController.getUploadPage);
 router.get('/files', isAuthenticated, transportController.getFilesByRegion);
 router.post('/upload',isAuthenticated, transportController.uploadFiles);
 router.post('/delete/:region/:id',isAuthenticated, transportController.deleteFile);
+
+
+//Visualization
+router.get('/visualization',isAuthenticated, visualizationController.getVisualizationPage);
+router.get('/visualization/files', isAuthenticated, visualizationController.getFilesByRegion);
+router.get('/visualization/route',isAuthenticated, visualizationController.getRouteData);
+router.get('/visualization/distance', isAuthenticated, visualizationController.calculateDistance);
 
 
 

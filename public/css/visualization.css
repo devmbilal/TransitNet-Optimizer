@@ -1,0 +1,107 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+.interactive-heading {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 100%;
+    text-align: center;
+    gap: 8px;
+    padding: 5px 10px;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+}
+
+.heading-bg {
+    background-color: #2C3E50;
+}
+
+.interactive-heading span {
+    display: inline-block;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.files-heading {
+    background-color: #436281;
+}
+
+.select-region {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.horizontal-pane {
+    background-color: #858688;
+    padding: 15px;
+    border: 1px solid #b1b3b6;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+}
+
+.map-container {
+    height: calc(100vh - 200px); /* Increased height by reducing subtracted value */
+    margin-bottom: 20px; /* Added margin bottom */
+}
+
+.map-placeholder {
+    height: 100%;
+    width: 100%;
+    background-color: #e9ecef;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 0 10px 10px;
+}
+
+.map-overlay {
+    text-align: center;
+}
+
+.route-preview {
+    margin: 5px 0;
+    font-weight: bold;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.form-check-label {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.form-check-label:hover {
+    color: #007bff;
+}
+
+@media (max-width: 768px) {
+    .horizontal-pane .row {
+        flex-direction: column;
+    }
+    .map-container {
+        height: calc(100vh - 270px); /* Adjusted for stacked layout on small screens */
+    }
+}
