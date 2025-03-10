@@ -8,9 +8,7 @@
 </head>
 <body>
     <div class="container mt-5">
-      <h3
-        class="text-center py-2 interactive-heading heading-bg text-white mb-0"
-      >
+      <h3 class="text-center py-2 interactive-heading heading-bg text-white mb-0">
         <span>Transport</span> <span>Data Management</span>
       </h3>
 
@@ -42,7 +40,7 @@
 
         <!-- Dynamic Section -->
         <% if (selectedRegion) { %>
-            <% if (files && (files.transportFiles.length > 0 || files.mobilityFile)) { %>
+            <% if (files && (files.transportFiles.length > 0 || files.mobilityAreaFile || files.mobilityMatrixFile)) { %>
                 <!-- Scenario 1: Region Exists -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-primary text-white">
@@ -62,12 +60,24 @@
                                 <% }) %>
                             </ul>
 
-                            <h6 class="text-muted">Mobility File:</h6>
+                            <h6 class="text-muted">Mobility Area Coordinates File:</h6>
                             <ul class="list-group mb-3">
-                                <% if (files.mobilityFile) { %>
+                                <% if (files.mobilityAreaFile) { %>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <%= files.mobilityFile.fileName %>
-                                        <form action="/delete/<%= selectedRegion %>/<%= files.mobilityFile._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                        <%= files.mobilityAreaFile.fileName %>
+                                        <form action="/delete/<%= selectedRegion %>/<%= files.mobilityAreaFile._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                            <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
+                                        </form>
+                                    </li>
+                                <% } %>
+                            </ul>
+
+                            <h6 class="text-muted">Mobility Matrix File:</h6>
+                            <ul class="list-group mb-3">
+                                <% if (files.mobilityMatrixFile) { %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <%= files.mobilityMatrixFile.fileName %>
+                                        <form action="/delete/<%= selectedRegion %>/<%= files.mobilityMatrixFile._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
                                             <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
                                         </form>
                                     </li>
@@ -84,9 +94,14 @@
                                 <small class="form-text text-muted">Select one or more CSV files</small>
                             </div>
                             <div class="mb-3">
-                                <label for="mobilityFile" class="form-label">Mobility File (CSV):</label>
-                                <input type="file" class="form-control" name="mobilityFile" id="mobilityFile" accept=".csv">
-                                <small class="form-text text-muted">Upload one CSV file</small>
+                                <label for="mobilityAreaFile" class="form-label">Mobility Area Coordinates File (CSV):</label>
+                                <input type="file" class="form-control" name="mobilityAreaFile" id="mobilityAreaFile" accept=".csv">
+                                <small class="form-text text-muted">Upload one CSV file for area coordinates</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="mobilityMatrixFile" class="form-label">Mobility Matrix File (CSV):</label>
+                                <input type="file" class="form-control" name="mobilityMatrixFile" id="mobilityMatrixFile" accept=".csv">
+                                <small class="form-text text-muted">Upload one CSV file for mobility matrix</small>
                             </div>
                             <button type="submit" class="btn btn-success w-100"><i class="bi bi-upload"></i> Upload Additional Files</button>
                         </form>
@@ -108,9 +123,14 @@
                                 <small class="form-text text-muted">Select one or more CSV files</small>
                             </div>
                             <div class="mb-3">
-                                <label for="mobilityFile" class="form-label">Mobility File (CSV):</label>
-                                <input type="file" class="form-control" name="mobilityFile" id="mobilityFile" accept=".csv">
-                                <small class="form-text text-muted">Upload one CSV file</small>
+                                <label for="mobilityAreaFile" class="form-label">Mobility Area Coordinates File (CSV):</label>
+                                <input type="file" class="form-control" name="mobilityAreaFile" id="mobilityAreaFile" accept=".csv">
+                                <small class="form-text text-muted">Upload one CSV file for area coordinates</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="mobilityMatrixFile" class="form-label">Mobility Matrix File (CSV):</label>
+                                <input type="file" class="form-control" name="mobilityMatrixFile" id="mobilityMatrixFile" accept=".csv">
+                                <small class="form-text text-muted">Upload one CSV file for mobility matrix</small>
                             </div>
                             <button type="submit" class="btn btn-primary w-100"><i class="bi bi-upload"></i> Upload New Files</button>
                         </form>
@@ -125,7 +145,8 @@
                 <h5 class="card-title">Instructions</h5>
                 <ul class="list-unstyled">
                     <li><i class="bi bi-check-circle text-success me-2"></i> Transport Files: Multiple CSV files allowed</li>
-                    <li><i class="bi bi-check-circle text-success me-2"></i> Mobility File: One CSV file per region</li>
+                    <li><i class="bi bi-check-circle text-success me-2"></i> Mobility Area Coordinates File: One CSV file per region</li>
+                    <li><i class="bi bi-check-circle text-success me-2"></i> Mobility Matrix File: One CSV file per region</li>
                     <li><i class="bi bi-check-circle text-success me-2"></i> Files updated only if changes detected</li>
                 </ul>
             </div>
@@ -136,12 +157,12 @@
             const messageDiv = document.getElementById('feedbackMessage');
             if (messageDiv) {
                 setTimeout(() => {
-                    messageDiv.style.transition = 'opacity 0.5s ease'; // Smooth fade-out
+                    messageDiv.style.transition = 'opacity 0.5s ease';
                     messageDiv.style.opacity = '0';
                     setTimeout(() => {
-                        messageDiv.remove(); // Remove from DOM after fade-out
-                    }, 500); // Match transition duration
-                }, 1500); // Clear after 3 seconds
+                        messageDiv.remove();
+                    }, 500);
+                }, 1500);
             }
         });
     </script>

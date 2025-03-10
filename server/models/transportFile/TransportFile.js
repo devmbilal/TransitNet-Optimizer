@@ -7,7 +7,7 @@ const TransportFileSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['transport', 'mobility'],
+    enum: ['transport', 'mobility-area', 'mobility-matrix'],
     required: true
   },
   region: {
