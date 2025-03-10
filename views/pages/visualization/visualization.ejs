@@ -68,7 +68,6 @@
                 style="max-height: 150px"
                 id="transportFiles"
               >
-                <h6 class="text-muted mb-3">Public Transport Files:</h6>
                 <% if (files && files.transportFiles.length > 0) { %> <%
                 files.transportFiles.forEach((file, index) => { %>
                 <div class="form-check mb-2">
@@ -86,23 +85,6 @@
                 </div>
                 <% }) %> <% } else { %>
                 <p class="text-muted">No transport files available.</p>
-                <% } %>
-                <h6 class="text-muted mt-3 mb-3">Mobility File:</h6>
-                <% if (files && files.mobilityFile) { %>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="mobility"
-                    data-file="<%= files.mobilityFile.fileName %>"
-                    onchange="toggleMobility(this)"
-                  />
-                  <label class="form-check-label" for="mobility">
-                    <%= files.mobilityFile.fileName %>
-                  </label>
-                </div>
-                <% } else { %>
-                <p class="text-muted">No mobility file available.</p>
                 <% } %>
               </div>
             </div>

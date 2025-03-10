@@ -16,7 +16,7 @@ function fetchFiles(region) {
       if (data.success) {
         const transportFilesDiv = document.getElementById('transportFiles');
         transportFilesDiv.innerHTML = `
-          <h6 class="text-muted mb-3">Public Transport Files:</h6>
+          
           ${data.files.transportFiles.length > 0 ? 
             data.files.transportFiles.map((file, index) => `
               <div class="form-check mb-2">
@@ -32,20 +32,7 @@ function fetchFiles(region) {
               </div>
             `).join('') : 
             '<p class="text-muted">No transport files available.</p>'
-          }
-          <h6 class="text-muted mt-3 mb-3">Mobility File:</h6>
-          ${data.files.mobilityFile ? `
-            <div class="form-check">
-              <input 
-                class="form-check-input" 
-                type="checkbox" 
-                id="mobility" 
-                data-file="${data.files.mobilityFile.fileName}" 
-                onchange="toggleMobility(this)"
-              />
-              <label class="form-check-label" for="mobility">${data.files.mobilityFile.fileName}</label>
-            </div>
-          ` : '<p class="text-muted">No mobility file available.</p>'}
+          } 
         `;
         map.setView(getRegionCenter(region), 13);
       } else {
@@ -54,7 +41,6 @@ function fetchFiles(region) {
     })
     .catch(error => console.error('Error fetching files:', error));
 }
-
 
 function toggleRoute(checkbox) {
   const fileName = checkbox.getAttribute('data-file');
@@ -134,7 +120,6 @@ async function getRoutePath(stops) {
   }
 }
 
-
 function toggleMobility(checkbox) {
   console.log(`${checkbox.getAttribute('data-file')} mobility ${checkbox.checked ? 'enabled' : 'disabled'}`);
 }
@@ -159,8 +144,6 @@ function applyFilters() {
     });
   }
 }
-
-
 
 function getRegionCenter(region) {
   const centers = {
