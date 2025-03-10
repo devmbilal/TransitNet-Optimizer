@@ -1,8 +1,5 @@
 const TransportFile = require('../../models/transportFile/TransportFile');
-const distance = require('google-distance-matrix');
 
-// Google Maps API key (replace with your own)
-distance.key(process.env.GOOGLE_MAPS_API_KEY);
 
 exports.getVisualizationPage = async (req, res) => {
   try {
@@ -41,37 +38,3 @@ exports.getRouteData = async (req, res) => {
   }
 };
 
-exports.calculateDistance = async (req, res) => {
-  try {
-    const { fileName, region } = req.query;
-    const file = await TransportFile.findOne({ fileName, region, type: 'transport' });
-    if (!file || !file.data || file.data.length < 2) {
-      return res.json({ success: false, message: 'Invalid route data' });
-    }
-
-    const origins = file.data.map(stop => `${stop.latitude},${stop.longitude}`);
-    const destinations = origins.slice(1); // Exclude first stop as origin
-    origins.pop(); // Exclude last stop as origin
-
-    distance.matrix(origins, destinations, (err, distances) => {
-      if (err) {
-        return res.json({ success: false, message: err.message });
-      }
-      if (!distances || distances.status !== 'OK') {
-        return res.json({ success: false, message: 'Distance calculation failed' });
-      }
-
-      let totalDistance = 0;
-      distances.rows.forEach(row => {
-        row.elements.forEach(element => {
-          if (element.status === 'OK') {
-            totalDistance += element.distance.value; // Distance in meters
-          }
-        });
-      });
-      res.json({ success: true, distance: totalDistance / 1000 }); // Convert to km
-    });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
-};
