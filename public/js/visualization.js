@@ -76,7 +76,7 @@ function toggleRoute(checkbox) {
           // Fetch and draw road-following route instead of direct lines
           const routeCoordinates = await getRoutePath(stops);
           const polyline = L.polyline(routeCoordinates, { color })
-            .bindPopup(`Route: ${fileName}`)
+            .bindPopup(`Route: ${fileName.replace('.csv', '')}`)
             .addTo(layerGroup);
 
           // Add stop markers
