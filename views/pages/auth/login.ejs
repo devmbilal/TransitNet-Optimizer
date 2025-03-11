@@ -20,7 +20,7 @@
         font-family: "Poppins", sans-serif; /* Updated font to Poppins */
         margin: 0;
         overflow: hidden;
-        /* background: url("/images/route.png") no-repeat center center fixed; */
+        background: url("/images/road.jpg") no-repeat center center fixed;
         background-size: cover;
         color: #fff;
         background-color: #e2dbdb;
@@ -162,7 +162,10 @@
     <div class="login-container">
       <div class="welcome-text">WELCOME BACK</div>
       <h2>Sign In to Your Account</h2>
-      <p>Let's get you signed in and straight to the icons.</p>
+      <p>
+        Let's get you signed in and straight to optimizing your public transport
+        routes!
+      </p>
       <% if (typeof error !== 'undefined' && error) { %>
       <div class="error"><%= error %></div>
       <% } %>
@@ -175,7 +178,7 @@
             name="email"
             required
             autocomplete="off"
-            placeholder="e.g. tchalla@wakanda.gov"
+            placeholder="e.g. devmbilal@roadsafety.gov"
           />
           <i class="fas fa-envelope icon"></i>
         </div>
