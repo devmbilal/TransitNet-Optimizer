@@ -88,7 +88,7 @@ function toggleRoute(checkbox) {
 }
 
 async function getRoutePath(stops) {
-  const apiKey = "5b3ce3597851110001cf624887d2455f8705477789fba235d303e0db"; // Replace with your ORS API Key
+  const apiKey = process.env.ORS_KEY;
   let coordinates = stops.map(stop => [stop.lng, stop.lat]); // ORS expects [lng, lat]
 
   const url = `https://api.openrouteservice.org/v2/directions/driving-car/geojson`;
