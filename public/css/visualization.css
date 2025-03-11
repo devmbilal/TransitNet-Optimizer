@@ -42,9 +42,30 @@ body {
     border-radius: 10px;
 }
 
+.horizontal-pane .row {
+    height: 100%; /* Ensure row takes full height of container */
+}
+
+.horizontal-pane .card {
+    height: 100%; /* Ensure each card takes full height of its column */
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal-pane .card-body {
+    flex-grow: 1; /* Allow card-body to grow and fill available space */
+    overflow: auto; /* Retain scroll for overflow content */
+}
+
 .map-container {
-    height: calc(100vh - 200px); /* Increased height by reducing subtracted value */
-    margin-bottom: 20px; /* Added margin bottom */
+    /* height: calc(100vh - 300px); Adjusted height to account for three sections + margins */
+
+    margin-bottom: 20px;
+}
+
+#map {
+    height: 90vh; /* Increase height to 80% of viewport */
+    width: 100%; /* Ensure full width */
 }
 
 .map-placeholder {
@@ -101,7 +122,15 @@ body {
     .horizontal-pane .row {
         flex-direction: column;
     }
-    .map-container {
-        height: calc(100vh - 270px); /* Adjusted for stacked layout on small screens */
+    .horizontal-pane .col-md-4 {
+        width: 100%; /* Full width on small screens */
+        margin-bottom: 15px; /* Space between stacked cards */
     }
+    .map-container {
+        height: calc(100vh - 450px); /* Adjusted for stacked layout with three sections */
+    }
+}
+
+.col-md-4{
+    padding: 0.5rem;
 }

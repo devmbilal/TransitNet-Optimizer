@@ -24,12 +24,6 @@
   </head>
   <body>
     <div class="container-fluid p-0">
-      <!-- Main Heading -->
-      <h3
-        class="text-center py-2 interactive-heading heading-bg text-white mb-0"
-      >
-        <span>Public Routes and </span> <span>Mobility Data Visualization</span>
-      </h3>
 
       <!-- Region Dropdown -->
       <div class="p-3 select-region">
@@ -54,23 +48,23 @@
         </div>
       </div>
 
-      <!-- Horizontal Pane: Transport Data and Filtration Options -->
-      <div class="horizontal-pane bg-light shadow-sm p-3">
-        <div class="row">
-          <!-- Transport Data Files -->
-          <div class="col-md-6">
-            <div class="card shadow-sm">
+      <!-- Horizontal Pane: Three Equal Sections -->
+      <div class="horizontal-pane bg-light shadow-sm p-3 mb-4">
+        <div class="row g-0">
+          <!-- Transport Files -->
+          <div class="col-md-4">
+            <div class="card shadow-sm h-100">
               <div class="card-header text-white files-heading">
-                <h5 class="mb-0">Transport Data Files</h5>
+                <h5 class="mb-0">Transport Files</h5>
               </div>
               <div
                 class="card-body overflow-auto"
-                style="max-height: 150px"
+                style="max-height: 150px; width: 100%" /* Retain max-height, set full width */
                 id="transportFiles"
               >
                 <% if (files && files.transportFiles.length > 0) { %> <%
                 files.transportFiles.forEach((file, index) => { %>
-                <div class="form-check mb-2">
+                <div class="form-check mb-2 w-100">
                   <input
                     class="form-check-input route-checkbox"
                     type="checkbox"
@@ -79,7 +73,7 @@
                     data-color="<%= ['#FF0000', '#0000FF', '#008000', '#800080', '#FFA500', '#00CED1', '#FF4500', '#FFD700', '#6A5ACD', '#20B2AA', '#DC143C', '#32CD32', '#9932CC', '#FF69B4', '#00FF7F', '#4682B4', '#DAA520', '#8B008B', '#ADFF2F', '#4169E1'][index % 20] %>"
                     onchange="toggleRoute(this)"
                   />
-                  <label class="form-check-label" for="route<%= index %>">
+                  <label class="form-check-label w-100" for="route<%= index %>">
                     <%= file.fileName %>
                   </label>
                 </div>
@@ -90,62 +84,84 @@
             </div>
           </div>
 
-          <!-- Filtration Options with Checkboxes -->
-          <div class="col-md-6">
-            <div class="card shadow-sm">
-              <div class="card-header bg-secondary text-white">
+          <!-- Mobility Coordinates -->
+          <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-header files-heading text-white">
+                <h5 class="mb-0">Mobility Coordinates</h5>
+              </div>
+              <div
+                class="card-body overflow-auto"
+                style="max-height: 150px; width: 100%" /* Retain max-height, set full width */
+                id="mobilityCoord"
+              >
+                <% if (files && files.mobilityFile) { %>
+                <div class="form-check mb-2 w-100">
+                  <input
+                    class="form-check-input mobility-checkbox"
+                    type="checkbox"
+                    id="mobility"
+                    data-file="<%= files.mobilityFile.fileName %>"
+                    onchange="toggleMobility(this)"
+                  />
+                  <label class="form-check-label w-100" for="mobility">
+                    <%= files.mobilityFile.fileName %>
+                  </label>
+                </div>
+                <% } else { %>
+                <p class="text-muted">No mobility file available.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtration Options -->
+          <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-header files-heading text-white">
                 <h5 class="mb-0">Filtration Options</h5>
               </div>
               <div class="card-body">
+                
                 <div class="form-check mb-2">
                   <input
                     class="form-check-input filter-checkbox"
                     type="checkbox"
-                    id="distance"
+                    id="travelDistance"
                     onchange="applyFilters()"
                   />
-                  <label class="form-check-label" for="distance"
-                    >Distance Calculation</label
+                  <label class="form-check-label" for="travelDistance"
+                    >Show Travel Distance</label
                   >
                 </div>
                 <div class="form-check mb-2">
                   <input
                     class="form-check-input filter-checkbox"
                     type="checkbox"
-                    id="travelDensity"
+                    id="haversineDistance"
                     onchange="applyFilters()"
                   />
-                  <label class="form-check-label" for="travelDensity"
-                    >Travel Density</label
+                  <label class="form-check-label" for="haversineDistance"
+                    >Show Haversine Distance</label
                   >
                 </div>
                 <div class="form-check mb-2">
                   <input
                     class="form-check-input filter-checkbox"
                     type="checkbox"
-                    id="stopDensity"
+                    id="showMobility"
                     onchange="applyFilters()"
                   />
-                  <label class="form-check-label" for="stopDensity"
-                    >Stop Density</label
-                  >
-                </div>
-                <div class="form-check mb-2">
-                  <input
-                    class="form-check-input filter-checkbox"
-                    type="checkbox"
-                    id="routeOverlap"
-                    onchange="applyFilters()"
-                  />
-                  <label class="form-check-label" for="routeOverlap"
-                    >Route Overlap</label
+                  <label class="form-check-label" for="showMobility"
+                    >Show Mobility</label
                   >
                 </div>
                 <button
-                  class="btn btn-primary w-100 mt-3"
-                  onclick="applyFilters()"
+                  class="btn btn-danger w-100 mb-3"
+                  id="removeMobilityEdges"
+                  onclick="removeMobilityEdges()"
                 >
-                  Apply Filters
+                  Remove Mobility Edges
                 </button>
               </div>
             </div>
@@ -170,6 +186,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS CDN -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Polyline Decorator -->
+    <script src="https://unpkg.com/leaflet.polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
     <!-- Custom JS -->
     <script src="/js/visualization.js"></script>
   </body>
