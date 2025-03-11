@@ -32,7 +32,7 @@ router.post('/delete/:region/:id',isAuthenticated, transportController.deleteFil
 router.get('/visualization',isAuthenticated, visualizationController.getVisualizationPage);
 router.get('/visualization/files', isAuthenticated, visualizationController.getFilesByRegion);
 router.get('/visualization/route',isAuthenticated, visualizationController.getRouteData);
-
+router.get('/visualization/mobility',isAuthenticated, visualizationController.getMobilityData);
 
 
 module.exports = router;

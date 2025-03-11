@@ -84,37 +84,21 @@
             </div>
           </div>
 
-          <!-- Mobility Coordinates -->
-          <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-              <div class="card-header files-heading text-white">
-                <h5 class="mb-0">Mobility Coordinates</h5>
-              </div>
-              <div
-                class="card-body overflow-auto"
-                style="max-height: 150px; width: 100%" /* Retain max-height, set full width */
-                id="mobilityCoord"
-              >
-                <% if (files && files.mobilityFile) { %>
-                <div class="form-check mb-2 w-100">
-                  <input
-                    class="form-check-input mobility-checkbox"
-                    type="checkbox"
-                    id="mobility"
-                    data-file="<%= files.mobilityFile.fileName %>"
-                    onchange="toggleMobility(this)"
-                  />
-                  <label class="form-check-label w-100" for="mobility">
-                    <%= files.mobilityFile.fileName %>
-                  </label>
-                </div>
-                <% } else { %>
-                <p class="text-muted">No mobility file available.</p>
-                <% } %>
-              </div>
-            </div>
-          </div>
-
+<!-- Mobility Coordinates -->
+<div class="col-md-4">
+  <div class="card shadow-sm h-100">
+    <div class="card-header files-heading text-white">
+      <h5 class="mb-0">Mobility Coordinates</h5>
+    </div>
+    <div
+      class="card-body overflow-auto"
+      style="max-height: 150px; width: 100%"
+      id="mobilityCoord"
+    >
+      <!-- Content will be populated by fetchFiles -->
+    </div>
+  </div>
+</div>
           <!-- Filtration Options -->
           <div class="col-md-4">
             <div class="card shadow-sm h-100">

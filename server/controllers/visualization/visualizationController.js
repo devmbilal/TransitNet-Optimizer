@@ -18,7 +18,7 @@ exports.getFilesByRegion = async (req, res) => {
     }
     const files = await TransportFile.find({ region }, 'fileName type data');
     const transportFiles = files.filter(f => f.type === 'transport');
-    const mobilityFile = files.find(f => f.type === 'mobility');
+    const mobilityFile = files.find(f => f.type === 'mobility-area'); // Changed to mobility-area
     res.json({ success: true, files: { transportFiles, mobilityFile } });
   } catch (error) {
     res.json({ success: false, message: error.message });
@@ -38,3 +38,21 @@ exports.getRouteData = async (req, res) => {
   }
 };
 
+exports.getMobilityData = async (req, res) => {
+  try {
+    const { fileName, region } = req.query;
+    const file = await TransportFile.findOne({ fileName, region, type: 'mobility-area' }); 
+    if (!file) {
+      return res.json({ success: false, message: 'Mobility file not found' });
+    }
+    // Assuming the data structure has AREA, LATITUDE, LONGITUDE as specified
+    const nodes = file.data.map(item => ({
+      area: item.AREA,
+      latitude: item.LATITUDE,
+      longitude: item.LONGITUDE
+    }));
+    res.json({ success: true, nodes });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};

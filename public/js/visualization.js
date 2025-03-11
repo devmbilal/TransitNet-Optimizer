@@ -1,5 +1,6 @@
 let map;
-let routeLayers = {}; // Store route layer groups (polyline + markers)
+let routeLayers = {}; 
+let mobilityLayer = null; 
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Leaflet map
@@ -7,19 +8,42 @@ document.addEventListener('DOMContentLoaded', () => {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
+
+  // Initialize mobilityCoord div with default message when no region is selected
+  const mobilityCoordDiv = document.getElementById('mobilityCoord');
+  mobilityCoordDiv.innerHTML = `
+    <p class="text-muted">No mobility file available. Please select a region.</p>
+  `;
 });
 
 function fetchFiles(region) {
+  const transportFilesDiv = document.getElementById('transportFiles');
+  const mobilityCoordDiv = document.getElementById('mobilityCoord');
+
+  // If no region is selected, show the default message
+  if (!region) {
+    transportFilesDiv.innerHTML = `
+      <p class="text-muted">No transport files available. Please select a region.</p>
+    `;
+    mobilityCoordDiv.innerHTML = `
+      <p class="text-muted">No mobility file available. Please select a region.</p>
+    `;
+    return; // Exit the function early
+  }
+
   fetch(`/visualization/files?region=${region}`)
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
       if (data.success) {
-        const transportFilesDiv = document.getElementById('transportFiles');
         transportFilesDiv.innerHTML = `
-          
           ${data.files.transportFiles.length > 0 ? 
             data.files.transportFiles.map((file, index) => `
-              <div class="form-check mb-2">
+              <div class="form-check mb-2 w-100">
                 <input 
                   class="form-check-input route-checkbox" 
                   type="checkbox" 
@@ -28,18 +52,27 @@ function fetchFiles(region) {
                   data-color="${['#FF0000', '#0000FF', '#008000', '#800080', '#FFA500', '#00CED1', '#FF4500', '#FFD700', '#6A5ACD', '#20B2AA', '#DC143C', '#32CD32', '#9932CC', '#FF69B4', '#00FF7F', '#4682B4', '#DAA520', '#8B008B', '#ADFF2F', '#4169E1'][index % 20]}" 
                   onchange="toggleRoute(this)"
                 />
-                <label class="form-check-label" for="route${index}">${file.fileName}</label>
+                <label class="form-check-label w-100" for="route${index}">${file.fileName}</label>
               </div>
             `).join('') : 
             '<p class="text-muted">No transport files available.</p>'
           } 
         `;
+        // Update mobilityCoord div
+        mobilityCoordDiv.innerHTML = `
+          ${data.files.mobilityFile ? `
+            <div class="form-check mb-2 w-100">
+              <input class="form-check-input mobility-checkbox" type="checkbox" id="mobility" data-file="${data.files.mobilityFile.fileName}" onchange="toggleMobility(this)" />
+              <label class="form-check-label w-100" for="mobility">${data.files.mobilityFile.fileName}</label>
+            </div>
+          ` : `
+            <p class="text-muted">No mobility file available.</p>
+          `}
+        `;
         map.setView(getRegionCenter(region), 13);
-      } else {
-        console.error(data.message);
       }
     })
-    .catch(error => console.error('Error fetching files:', error));
+    .catch(error => console.error('Error fetching files:', error)); // Keep error logging for critical failures
 }
 
 function toggleRoute(checkbox) {
@@ -121,7 +154,71 @@ async function getRoutePath(stops) {
 }
 
 function toggleMobility(checkbox) {
-  console.log(`${checkbox.getAttribute('data-file')} mobility ${checkbox.checked ? 'enabled' : 'disabled'}`);
+  const fileName = checkbox.getAttribute('data-file');
+  const region = document.getElementById('regionSelect').value;
+  console.log('Toggling mobility for file:', fileName, 'in region:', region); // Debug
+
+  if (checkbox.checked) {
+    fetch(`/visualization/mobility?fileName=${encodeURIComponent(fileName)}&region=${encodeURIComponent(region)}`) // Encode query params
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => {
+            throw new Error(`HTTP error! status: ${response.status}, response: ${text}`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Mobility data received:', data); // Debug
+        if (data.success && data.nodes && data.nodes.length > 0) {
+          const nodes = data.nodes.map(node => {
+            const lat = parseFloat(node.latitude);
+            const lng = parseFloat(node.longitude);
+            if (isNaN(lat) || isNaN(lng)) {
+              console.warn(`Invalid coordinates for area ${node.area}: lat=${node.latitude}, lng=${node.longitude}`);
+              return null;
+            }
+            return {
+              lat,
+              lng,
+              area: node.area
+            };
+          }).filter(node => node !== null); // Filter out invalid entries
+
+          // Clear existing mobility layer if any
+          if (mobilityLayer) {
+            map.removeLayer(mobilityLayer);
+          }
+
+          // Create a layer group for mobility nodes
+          mobilityLayer = L.layerGroup();
+          nodes.forEach(node => {
+            const marker = L.circleMarker([node.lat, node.lng], {
+              radius: 10, // Larger size for nodes
+              fillColor: '#FF5733', // Distinct color for mobility nodes
+              color: '#FF5733',
+              fillOpacity: 0.7,
+              weight: 2
+            })
+              .bindPopup(`Area: ${node.area}<br>Lat: ${node.lat}<br>Lng: ${node.lng}`);
+            marker.addTo(mobilityLayer);
+          });
+
+          if (nodes.length > 0) {
+            mobilityLayer.addTo(map);
+            map.fitBounds(mobilityLayer.getBounds());
+          }
+        } else {
+          console.error('Failed to load mobility data:', data.message || 'No nodes found');
+        }
+      })
+      .catch(error => console.error('Error fetching or rendering mobility data:', error));
+  } else {
+    if (mobilityLayer) {
+      map.removeLayer(mobilityLayer);
+      mobilityLayer = null;
+    }
+  }
 }
 
 function applyFilters() {
