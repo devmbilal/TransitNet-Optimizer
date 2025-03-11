@@ -5,91 +5,182 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
     <title>TransitNet Optimizer</title>
+    <!-- Import Poppins font from Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Use Font Awesome CDN instead of kit -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <style>
       body {
-        font-family: "Arial", sans-serif;
+        font-family: "Poppins", sans-serif;
         margin: 0;
         overflow: hidden;
-        background-color: #0e1532;
+        /* background: url("/images/route.png") no-repeat center center fixed; */
+        background-size: cover;
         color: #fff;
+        background-color: #e8e4e4;
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100vh;
       }
 
-      h2 {
+      .form-container {
+        position: relative;
+        overflow: hidden;
+        width: 450px;
+        max-width: 100%;
+        border-radius: 8px;
+        box-sizing: border-box;
+        animation: fadeIn 1s ease-in-out;
+        background-color: #fff;
+        color: #000;
+        padding: 30px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         text-align: center;
+      }
+
+      .welcome-text {
+        color: #f5c518;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .smiley {
+        font-size: 40px;
         margin-bottom: 10px;
       }
 
-      .form-container {
-        width: 400px;
-        max-width: 100%;
-        padding: 30px;
-        border-radius: 8px;
-        box-sizing: border-box;
-        background-color: #fff;
-        color: #000;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
       .form-container h2 {
-        margin-bottom: 20px;
+        font-size: 28px;
+        font-weight: 700;
+        color: #1a3c5e;
+        margin-bottom: 5px;
       }
 
-      label {
-        display: block;
-        margin-bottom: 8px;
-      }
-
-      input,
-      select {
-        width: 100%;
-        padding: 12px;
+      .form-container p {
+        font-size: 14px;
+        font-weight: 400;
+        color: #666;
         margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-      }
-
-      input[type="submit"] {
-        background-color: #187bff;
-        color: #fff;
-        border: none;
-        padding: 14px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-      }
-
-      input[type="submit"]:hover {
-        background-color: #145b9c;
       }
 
       .form-group {
-        margin-top: 20px;
-        text-align: center;
+        position: relative;
+        margin-bottom: 10px;
+        text-align: left;
       }
 
-      .form-group p {
-        margin-bottom: 0;
+      .form-group-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 10px;
       }
 
-      .form-group a {
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a3c5e;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px 12px 10px 40px; /* Adjusted for icons */
+        border: 1px solid #000;
+        border-radius: 20px;
+        box-sizing: border-box;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      .form-group .icon {
+        position: absolute;
+        left: 10px;
+        top: 65%;
+        transform: translateY(-50%);
+        color: #666;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      input[type="submit"] {
+        background-color: #f5c518;
+        color: #1a3c5e;
+        border: none;
+        padding: 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        font-family: "Poppins", sans-serif;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #e0b015;
+      }
+
+      .form-options {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .form-options a {
         color: #007bff;
         text-decoration: none;
+        margin-left: 5px;
       }
 
-      .form-group a:hover {
+      .form-options a:hover {
         text-decoration: underline;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
 
       .error {
         color: red;
         text-align: center;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+      }
+
+      input::placeholder {
+        color: #999;
+        font-style: italic;
+      }
+      .icon {
+        margin-top: 4px;
+        margin: 3px;
       }
     </style>
   </head>
@@ -97,50 +188,78 @@
   <body>
     <div class="form-container">
       <h2>Sign Up</h2>
+      <p>Let's get you registered and started with TransitNet.</p>
       <% if (typeof error !== 'undefined' && error) { %>
       <div class="error"><%= error %></div>
       <% } %>
       <form action="/signup" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required autocomplete="off" />
-
-        <label for="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          autocomplete="off"
-        />
-
-        <label for="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          autocomplete="off"
-        />
-
-        <label for="userType">User Type:</label>
-        <select id="userType" name="userType" required>
-          <option value="">Select User Type</option>
-          <option value="PolicyMaker">Policy Maker</option>
-          <option value="Engineer">Engineer</option>
-        </select>
-
-        <label for="organization">Organization (optional):</label>
-        <input
-          type="text"
-          id="organization"
-          name="organization"
-          autocomplete="off"
-        />
-
-        <input type="submit" value="Sign Up" />
+        <div class="form-group-row">
+          <div class="form-group" style="flex: 1">
+            <label for="name">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              autocomplete="off"
+              placeholder="Enter your name"
+            />
+            <i class="fas fa-user icon"></i>
+          </div>
+          <div class="form-group" style="flex: 1">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              autocomplete="off"
+              placeholder="e.g. user@example.com"
+            />
+            <i class="fas fa-envelope icon"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            autocomplete="off"
+            placeholder="Enter your password"
+          />
+          <i class="fas fa-lock icon" id="togglePassword"></i>
+        </div>
+        <div class="form-group-row">
+          <div class="form-group" style="flex: 1">
+            <label for="userType">User Type:</label>
+            <select id="userType" name="userType" required>
+              <option value="">Select User Type</option>
+              <option value="PolicyMaker">Policy Maker</option>
+              <option value="Engineer">Engineer</option>
+            </select>
+            <i class="fas fa-caret-down icon"></i>
+          </div>
+          <div class="form-group" style="flex: 1">
+            <label for="organization">Organization (optional):</label>
+            <input
+              type="text"
+              id="organization"
+              name="organization"
+              autocomplete="off"
+              placeholder="Enter organization"
+            />
+            <i class="fas fa-sitemap icon"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Sign Up" />
+        </div>
       </form>
-      <div class="form-group">
-        <p>Already have an Account? <a href="/login">Login</a></p>
+      <div class="form-options">
+        <p>Already have an Account?</p>
+        <a href="/login">Login</a>
       </div>
     </div>
     <script>
@@ -148,6 +267,22 @@
         const form = document.querySelector("form");
         const passwordInput = document.getElementById("password");
 
+        // Password toggle functionality
+        document
+          .getElementById("togglePassword")
+          .addEventListener("click", function () {
+            if (passwordInput.type === "password") {
+              passwordInput.type = "text";
+              this.classList.remove("fa-lock");
+              this.classList.add("fa-lock-open");
+            } else {
+              passwordInput.type = "password";
+              this.classList.remove("fa-lock-open");
+              this.classList.add("fa-lock");
+            }
+          });
+
+        // Password length validation
         form.addEventListener("submit", function (event) {
           const password = passwordInput.value;
 
