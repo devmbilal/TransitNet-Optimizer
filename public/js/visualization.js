@@ -221,27 +221,6 @@ function toggleMobility(checkbox) {
   }
 }
 
-function applyFilters() {
-  const distanceChecked = document.getElementById('distance').checked;
-  const region = document.getElementById('regionSelect').value;
-  
-  if (distanceChecked) {
-    document.querySelectorAll('.route-checkbox:checked').forEach(checkbox => {
-      const fileName = checkbox.getAttribute('data-file');
-      fetch(`/visualization/distance?fileName=${fileName}&region=${region}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            console.log(`${fileName} distance: ${data.distance} km`);
-            // Optionally add to map popup in future
-          } else {
-            console.error(data.message);
-          }
-        });
-    });
-  }
-}
-
 function getRegionCenter(region) {
   const centers = {
     'Islamabad': [33.6844, 73.0479],
