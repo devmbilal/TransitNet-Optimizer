@@ -5,19 +5,24 @@ const STATIC_REGIONS = ['Islamabad', 'Lahore', 'Karachi', 'Faisalabad'];
 
 // Render upload page
 exports.getUploadPage = async (req, res) => {
+  const locals = { pageName: 'Upload Mobility and Transport Data' };
+
   try {
-    res.render('pages/upload/upload', { regions: STATIC_REGIONS, files: null, message: null, selectedRegion: null });
+    res.render('pages/upload/upload', { locals, regions: STATIC_REGIONS, files: null, message: null, selectedRegion: null });
   } catch (error) {
-    res.render('pages/upload/upload', { regions: STATIC_REGIONS, files: null, message: 'Error loading page: ' + error.message, selectedRegion: null });
+    res.render('pages/upload/upload', { locals, regions: STATIC_REGIONS, files: null, message: 'Error loading page: ' + error.message, selectedRegion: null });
   }
 };
 
 // Handle region selection and file display
 exports.getFilesByRegion = async (req, res) => {
+  const locals = { pageName: 'Upload Mobility and Transport Data' };
+
   try {
     const { region } = req.query;
     if (!STATIC_REGIONS.includes(region)) {
       return res.render('pages/upload/upload', { 
+        locals,
         regions: STATIC_REGIONS, 
         files: null, 
         message: 'Invalid region selected.', 
@@ -28,8 +33,9 @@ exports.getFilesByRegion = async (req, res) => {
     const files = await TransportFile.find({ region }, 'fileName type _id');
     const transportFiles = files.filter(f => f.type === 'transport');
     const mobilityAreaFile = files.find(f => f.type === 'mobility-area');
-    const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix'); // Changed to filter for multiple files
+    const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
     res.render('pages/upload/upload', { 
+      locals,
       regions: STATIC_REGIONS, 
       files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
       message: null, 
@@ -37,6 +43,7 @@ exports.getFilesByRegion = async (req, res) => {
     });
   } catch (error) {
     res.render('pages/upload/upload', { 
+      locals,
       regions: STATIC_REGIONS, 
       files: null, 
       message: 'Error fetching files: ' + error.message, 
@@ -47,10 +54,13 @@ exports.getFilesByRegion = async (req, res) => {
 
 // Handle file upload
 exports.uploadFiles = async (req, res) => {
+  const locals = { pageName: 'Upload Mobility and Transport Data' };
+
   try {
     const { region } = req.body;
     if (!region || !STATIC_REGIONS.includes(region)) {
       return res.render('pages/upload/upload', { 
+        locals,
         regions: STATIC_REGIONS, 
         files: null, 
         message: 'Please select a valid region from the list.', 
@@ -64,12 +74,14 @@ exports.uploadFiles = async (req, res) => {
       const mobilityAreaFile = files.find(f => f.type === 'mobility-area');
       const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
       return res.render('pages/upload/upload', { 
+        locals,
         regions: STATIC_REGIONS, 
         files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
         message: 'No files uploaded.', 
         selectedRegion: region 
       });
     }
+
 
     const transportFiles = req.files.transportFiles ? 
       (Array.isArray(req.files.transportFiles) ? req.files.transportFiles : [req.files.transportFiles]) : [];
@@ -174,6 +186,7 @@ exports.uploadFiles = async (req, res) => {
     const mobilityMatrixFilesList = files.filter(f => f.type === 'mobility-matrix');
 
     res.render('pages/upload/upload', { 
+      locals,
       regions: STATIC_REGIONS, 
       files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFiles: mobilityMatrixFilesList }, 
       message: 'Files uploaded successfully!', 
@@ -185,6 +198,7 @@ exports.uploadFiles = async (req, res) => {
     const mobilityAreaFile = files.find(f => f.type === 'mobility-area');
     const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
     res.render('pages/upload/upload', { 
+      locals,
       regions: STATIC_REGIONS, 
       files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
       message: 'Error uploading files: ' + error.message, 
@@ -195,10 +209,13 @@ exports.uploadFiles = async (req, res) => {
 
 // Handle file deletion
 exports.deleteFile = async (req, res) => {
+  const locals = { pageName: 'Upload Mobility and Transport Data' };
+
   try {
     const { id, region } = req.params;
     if (!STATIC_REGIONS.includes(region)) {
       return res.render('pages/upload/upload', { 
+        locals,
         regions: STATIC_REGIONS, 
         files: null, 
         message: 'Invalid region selected.', 
@@ -214,6 +231,7 @@ exports.deleteFile = async (req, res) => {
     const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
 
     res.render('pages/upload/upload', { 
+      locals,
       regions: STATIC_REGIONS, 
       files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
       message: 'File deleted successfully!', 
@@ -221,6 +239,7 @@ exports.deleteFile = async (req, res) => {
     });
   } catch (error) {
     res.render('pages/upload/upload', { 
+      locals,
       regions: STATIC_REGIONS, 
       files: null, 
       message: 'Error deleting file: ' + error.message, 

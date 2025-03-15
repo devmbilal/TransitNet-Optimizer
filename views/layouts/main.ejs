@@ -23,6 +23,9 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/upload.css" />
+    <link rel="stylesheet" href="/css/visualization.css" />
   </head>
   <body>
     <%- include('../partials/header.ejs') %>
@@ -30,17 +33,21 @@
     <div class="container-fluid">
       <div class="row">
         <%- include('../partials/sidebar.ejs') %>
-
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4"><%- body %></main>
       </div>
     </div>
-
+    <!-- Bootstrap JS Bundle -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
       crossorigin="anonymous"
     ></script>
-    <!-- Add Leaflet JS -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Polyline Decorator -->
+    <script src="https://unpkg.com/leaflet.polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
+
+    <!-- visualization JS -->
+    <script src="/js/visualization.js"></script>
   </body>
 </html>

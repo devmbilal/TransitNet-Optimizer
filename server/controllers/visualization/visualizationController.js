@@ -4,11 +4,21 @@ const TransportFile = require('../../models/transportFile/TransportFile');
 exports.getVisualizationPage = async (req, res) => {
   try {
     const regions = await TransportFile.distinct('region');
-    res.render('pages/visualization/visualization', { regions, files: null });
+
+    const locals = {
+      pageName: 'Layered Visialization'
+    };
+
+    res.render('pages/visualization/visualization', { locals, regions, files: null });
   } catch (error) {
-    res.render('pages/visualization/visualization', { regions: [], files: null, error: error.message });
+    const locals = {
+      pageName: 'Data Visualization'
+    };
+
+    res.render('pages/visualization/visualization', { locals, regions: [], files: null, error: error.message });
   }
 };
+
 
 exports.getFilesByRegion = async (req, res) => {
   try {

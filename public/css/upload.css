@@ -1,87 +1,8 @@
-body {
-    background-color: #f8f9fa;
-    font-family: 'Arial', sans-serif;
-}
-
-/* Interactive Heading (Smaller) */
-.interactive-heading {
-    margin-top: 2rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    width: 100%;
-    text-align: center;
-    gap: 8px;
-    padding: 5px 10px;
-    margin-bottom: 2rem;
-    border-radius: 10px;
-}
-
-.heading-bg {
-    background-color: #2C3E50; /* Deep slate blue for professional look */
-}
-
-.interactive-heading span {
-    display: inline-block;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-
-
-@keyframes headingPulse {
-    0% { opacity: 0.8; }
-    50% { opacity: 1; }
-    100% { opacity: 0.8; }
-}
-
-/* Rest of the styles */
-.card {
-    border: none;
-    margin-top: 2rem;
-    border-radius: 10px;
-    transition: transform 0.2s;
-}
-
-/* .card:hover {
-    transform: translateY(-5px);
-} */
-
-.card-header {
-    border-radius: 10px 10px 0 0;
-}
-
 .alert {
     border-radius: 8px;
     margin-bottom: 20px;
 }
 
-.form-select, 
-.form-control {
-    border-radius: 8px;
-}
-
-.btn {
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 500;
-}
-
-.btn-sm {
-    padding: 5px 10px;
-}
-
-.list-group-item {
-    border-radius: 8px;
-    margin-bottom: 5px;
-}
-
-.form-text {
-    margin-top: 5px;
-}
-
-.card-title {
-    margin-bottom: 15px;
-}
-
-.text-muted {
-    font-size: 0.9em;
+.instructions{
+    margin-bottom: 25px;
 }
