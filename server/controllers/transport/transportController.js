@@ -25,13 +25,13 @@ exports.getFilesByRegion = async (req, res) => {
       });
     }
 
-    const files = await TransportFile.find({ region }, 'fileName type');
+    const files = await TransportFile.find({ region }, 'fileName type _id');
     const transportFiles = files.filter(f => f.type === 'transport');
     const mobilityAreaFile = files.find(f => f.type === 'mobility-area');
-    const mobilityMatrixFile = files.find(f => f.type === 'mobility-matrix');
+    const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix'); // Changed to filter for multiple files
     res.render('pages/upload/upload', { 
       regions: STATIC_REGIONS, 
-      files: { transportFiles, mobilityAreaFile, mobilityMatrixFile }, 
+      files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
       message: null, 
       selectedRegion: region 
     });
@@ -58,14 +58,14 @@ exports.uploadFiles = async (req, res) => {
       });
     }
 
-    if (!req.files || (!req.files.transportFiles && !req.files.mobilityAreaFile && !req.files.mobilityMatrixFile)) {
-      const files = await TransportFile.find({ region }, 'fileName type');
+    if (!req.files || (!req.files.transportFiles && !req.files.mobilityAreaFile && !req.files.mobilityMatrixFiles)) {
+      const files = await TransportFile.find({ region }, 'fileName type _id');
       const transportFiles = files.filter(f => f.type === 'transport');
       const mobilityAreaFile = files.find(f => f.type === 'mobility-area');
-      const mobilityMatrixFile = files.find(f => f.type === 'mobility-matrix');
+      const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
       return res.render('pages/upload/upload', { 
         regions: STATIC_REGIONS, 
-        files: { transportFiles, mobilityAreaFile, mobilityMatrixFile }, 
+        files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
         message: 'No files uploaded.', 
         selectedRegion: region 
       });
@@ -74,18 +74,19 @@ exports.uploadFiles = async (req, res) => {
     const transportFiles = req.files.transportFiles ? 
       (Array.isArray(req.files.transportFiles) ? req.files.transportFiles : [req.files.transportFiles]) : [];
     const mobilityAreaFile = req.files.mobilityAreaFile;
-    const mobilityMatrixFile = req.files.mobilityMatrixFile;
+    const mobilityMatrixFiles = req.files.mobilityMatrixFiles ? 
+      (Array.isArray(req.files.mobilityMatrixFiles) ? req.files.mobilityMatrixFiles : [req.files.mobilityMatrixFiles]) : [];
 
     // Process transport files (unchanged)
     for (const file of transportFiles) {
       if (file.mimetype !== 'text/csv') {
-        const files = await TransportFile.find({ region }, 'fileName type');
+        const files = await TransportFile.find({ region }, 'fileName type _id');
         const transportFilesList = files.filter(f => f.type === 'transport');
         const mobilityAreaFileList = files.find(f => f.type === 'mobility-area');
-        const mobilityMatrixFileList = files.find(f => f.type === 'mobility-matrix');
+        const mobilityMatrixFilesList = files.filter(f => f.type === 'mobility-matrix');
         return res.render('pages/upload/upload', { 
           regions: STATIC_REGIONS, 
-          files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFile: mobilityMatrixFileList }, 
+          files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFiles: mobilityMatrixFilesList }, 
           message: `Invalid file type for ${file.name}. Only CSV allowed.`, 
           selectedRegion: region 
         });
@@ -103,16 +104,16 @@ exports.uploadFiles = async (req, res) => {
       }
     }
 
-    // Process mobility area file
+    // Process mobility area file (unchanged)
     if (mobilityAreaFile) {
       if (mobilityAreaFile.mimetype !== 'text/csv') {
-        const files = await TransportFile.find({ region }, 'fileName type');
+        const files = await TransportFile.find({ region }, 'fileName type _id');
         const transportFilesList = files.filter(f => f.type === 'transport');
         const mobilityAreaFileList = files.find(f => f.type === 'mobility-area');
-        const mobilityMatrixFileList = files.find(f => f.type === 'mobility-matrix');
+        const mobilityMatrixFilesList = files.filter(f => f.type === 'mobility-matrix');
         return res.render('pages/upload/upload', { 
           regions: STATIC_REGIONS, 
-          files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFile: mobilityMatrixFileList }, 
+          files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFiles: mobilityMatrixFilesList }, 
           message: `Invalid file type for ${mobilityAreaFile.name}. Only CSV allowed.`, 
           selectedRegion: region 
         });
@@ -135,58 +136,57 @@ exports.uploadFiles = async (req, res) => {
       }
     }
 
-    // Process mobility matrix file
-    if (mobilityMatrixFile) {
-      if (mobilityMatrixFile.mimetype !== 'text/csv') {
-        const files = await TransportFile.find({ region }, 'fileName type');
+    // Process multiple mobility matrix files
+    for (const file of mobilityMatrixFiles) {
+      if (file.mimetype !== 'text/csv') {
+        const files = await TransportFile.find({ region }, 'fileName type _id');
         const transportFilesList = files.filter(f => f.type === 'transport');
         const mobilityAreaFileList = files.find(f => f.type === 'mobility-area');
-        const mobilityMatrixFileList = files.find(f => f.type === 'mobility-matrix');
+        const mobilityMatrixFilesList = files.filter(f => f.type === 'mobility-matrix');
         return res.render('pages/upload/upload', { 
           regions: STATIC_REGIONS, 
-          files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFile: mobilityMatrixFileList }, 
-          message: `Invalid file type for ${mobilityMatrixFile.name}. Only CSV allowed.`, 
+          files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFiles: mobilityMatrixFilesList }, 
+          message: `Invalid file type for ${file.name}. Only CSV allowed.`, 
           selectedRegion: region 
         });
       }
 
-      const csvData = parse(mobilityMatrixFile.data.toString('utf8'), { columns: true, skip_empty_lines: true });
-      const existingMobilityMatrix = await TransportFile.findOne({ type: 'mobility-matrix', region });
-      if (existingMobilityMatrix) {
-        existingMobilityMatrix.fileName = mobilityMatrixFile.name;
-        existingMobilityMatrix.data = csvData;
-        existingMobilityMatrix.updatedAt = new Date();
-        await existingMobilityMatrix.save();
-      } else {
+      const csvData = parse(file.data.toString('utf8'), { columns: true, skip_empty_lines: true });
+      const existingFile = await TransportFile.findOne({ fileName: file.name, type: 'mobility-matrix', region });
+      if (!existingFile) {
         await TransportFile.create({
-          fileName: mobilityMatrixFile.name,
+          fileName: file.name,
           type: 'mobility-matrix',
           region,
           data: csvData
         });
+      } else {
+        existingFile.data = csvData;
+        existingFile.updatedAt = new Date();
+        await existingFile.save();
       }
     }
 
     // Fetch updated files after upload
-    const files = await TransportFile.find({ region }, 'fileName type');
+    const files = await TransportFile.find({ region }, 'fileName type _id');
     const transportFilesList = files.filter(f => f.type === 'transport');
     const mobilityAreaFileList = files.find(f => f.type === 'mobility-area');
-    const mobilityMatrixFileList = files.find(f => f.type === 'mobility-matrix');
+    const mobilityMatrixFilesList = files.filter(f => f.type === 'mobility-matrix');
 
     res.render('pages/upload/upload', { 
       regions: STATIC_REGIONS, 
-      files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFile: mobilityMatrixFileList }, 
+      files: { transportFiles: transportFilesList, mobilityAreaFile: mobilityAreaFileList, mobilityMatrixFiles: mobilityMatrixFilesList }, 
       message: 'Files uploaded successfully!', 
       selectedRegion: region 
     });
   } catch (error) {
-    const files = await TransportFile.find({ region }, 'fileName type').catch(() => []);
+    const files = await TransportFile.find({ region }, 'fileName type _id').catch(() => []);
     const transportFiles = files.filter(f => f.type === 'transport');
     const mobilityAreaFile = files.find(f => f.type === 'mobility-area');
-    const mobilityMatrixFile = files.find(f => f.type === 'mobility-matrix');
+    const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
     res.render('pages/upload/upload', { 
       regions: STATIC_REGIONS, 
-      files: { transportFiles, mobilityAreaFile, mobilityMatrixFile }, 
+      files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
       message: 'Error uploading files: ' + error.message, 
       selectedRegion: region 
     });
@@ -208,14 +208,14 @@ exports.deleteFile = async (req, res) => {
 
     await TransportFile.findByIdAndDelete(id);
 
-    const files = await TransportFile.find({ region }, 'fileName type');
+    const files = await TransportFile.find({ region }, 'fileName type _id');
     const transportFiles = files.filter(f => f.type === 'transport');
     const mobilityAreaFile = files.find(f => f.type === 'mobility-area');
-    const mobilityMatrixFile = files.find(f => f.type === 'mobility-matrix');
+    const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
 
     res.render('pages/upload/upload', { 
       regions: STATIC_REGIONS, 
-      files: { transportFiles, mobilityAreaFile, mobilityMatrixFile }, 
+      files: { transportFiles, mobilityAreaFile, mobilityMatrixFiles }, 
       message: 'File deleted successfully!', 
       selectedRegion: region 
     });
