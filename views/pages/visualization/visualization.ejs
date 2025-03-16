@@ -1,91 +1,87 @@
 <body>
-    <div class="container-fluid p-0">
-      <!-- Region Dropdown -->
-      <div class="p-3 select-region">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="input-group">
-              <span class="input-group-text">
-                <i class="bi bi-geo-alt"></i> Select Region:
-              </span>
-              <select
-                class="form-select"
-                id="regionSelect"
-                onchange="fetchFiles(this.value)"
+  <div class="container-fluid p-0">
+    <!-- Region Dropdown -->
+    <div class="p-3 select-region">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-geo-alt"></i> Select Region:
+            </span>
+            <select
+              class="form-select"
+              id="regionSelect"
+              onchange="fetchFiles(this.value)"
+            >
+              <option value="" selected disabled>Choose a region...</option>
+              <% regions.forEach(region => { %>
+              <option value="<%= region %>"><%= region %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal Pane: Two Equal Sections -->
+    <div class="horizontal-pane bg-light shadow-sm p-3 mb-4">
+      <div class="row g-0">
+        <!-- Public Routes and Mobility Nodes -->
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-header text-white files-heading">
+              <h5 class="mb-0">Public Routes and Mobility Nodes</h5>
+            </div>
+            <div
+              class="card-body overflow-auto"
+              style="max-height: 150px; width: 100%"
+              id="transportFiles"
+            >
+              <h6 class="mt-0 fw-bold">Public Routes</h6>
+              <% if (files && files.transportFiles.length > 0) { %> <%
+              files.transportFiles.forEach((file, index) => { %>
+              <div class="form-check mb-2 w-100">
+                <input
+                  class="form-check-input route-checkbox"
+                  type="checkbox"
+                  id="route<%= index %>"
+                  data-file="<%= file.fileName %>"
+                  data-color="<%= ['#FF0000', '#0000FF', '#008000', '#800080', '#FFA500', '#00CED1', '#FF4500', '#FFD700', '#6A5ACD', '#20B2AA', '#DC143C', '#32CD32', '#9932CC', '#FF69B4', '#00FF7F', '#4682B4', '#DAA520', '#8B008B', '#ADFF2F', '#4169E1'][index % 20] %>"
+                  onchange="toggleRoute(this)"
+                />
+                <label class="form-check-label w-100" for="route<%= index %>">
+                  <%= file.fileName %>
+                </label>
+              </div>
+              <% }) %> <% } else { %>
+              <p class="text-muted">No transport files available.</p>
+              <% } %>
+
+              <!-- Mobility Coordinates moved here -->
+              <h6 class="mt-3 fw-bold">Mobility Nodes</h6>
+              <div
+                id="mobilityCoord"
+                class="overflow-auto"
+                style="max-height: 150px; width: 100%"
               >
-                <option value="" selected disabled>Choose a region...</option>
-                <% regions.forEach(region => { %>
-                <option value="<%= region %>"><%= region %></option>
-                <% }) %>
-              </select>
+                <!-- Content will be populated by fetchFiles -->
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- Horizontal Pane: Three Equal Sections -->
-      <div class="horizontal-pane bg-light shadow-sm p-3 mb-4">
-        <div class="row g-0">
-          <!-- Transport Files -->
-          <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-              <div class="card-header text-white files-heading">
-                <h5 class="mb-0">Transport Files</h5>
-              </div>
-              <div
-                class="card-body overflow-auto"
-                style="max-height: 150px; width: 100%" /* Retain max-height, set full width */
-                id="transportFiles"
-              >
-                <% if (files && files.transportFiles.length > 0) { %> <%
-                files.transportFiles.forEach((file, index) => { %>
-                <div class="form-check mb-2 w-100">
-                  <input
-                    class="form-check-input route-checkbox"
-                    type="checkbox"
-                    id="route<%= index %>"
-                    data-file="<%= file.fileName %>"
-                    data-color="<%= ['#FF0000', '#0000FF', '#008000', '#800080', '#FFA500', '#00CED1', '#FF4500', '#FFD700', '#6A5ACD', '#20B2AA', '#DC143C', '#32CD32', '#9932CC', '#FF69B4', '#00FF7F', '#4682B4', '#DAA520', '#8B008B', '#ADFF2F', '#4169E1'][index % 20] %>"
-                    onchange="toggleRoute(this)"
-                  />
-                  <label class="form-check-label w-100" for="route<%= index %>">
-                    <%= file.fileName %>
-                  </label>
-                </div>
-                <% }) %> <% } else { %>
-                <p class="text-muted">No transport files available.</p>
-                <% } %>
-              </div>
-            </div>
-          </div>
-
-<!-- Mobility Coordinates -->
-<div class="col-md-4">
-  <div class="card shadow-sm h-100">
-    <div class="card-header files-heading text-white">
-      <h5 class="mb-0">Mobility Coordinates</h5>
     </div>
-    <div
-      class="card-body overflow-auto"
-      style="max-height: 150px; width: 100%"
-      id="mobilityCoord"
-    >
-      <!-- Content will be populated by fetchFiles -->
+
+    <!-- Full-Screen Map -->
+    <div class="map-container">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">Map View</h5>
+        </div>
+        <div class="card-body p-0">
+          <div id="map" class="map-placeholder"></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-        </div>
-      </div>
-
-      <!-- Full-Screen Map -->
-      <div class="map-container">
-        <div class="card shadow-sm h-100">
-          <div class="card-header bg-success text-white">
-            <h5 class="mb-0">Map View</h5>
-          </div>
-          <div class="card-body p-0">
-            <div id="map" class="map-placeholder"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+</body>

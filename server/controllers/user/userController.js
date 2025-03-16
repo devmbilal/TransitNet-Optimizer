@@ -108,7 +108,7 @@ const allLogin = async (req, res) => {
                 organization: user.organization
             };
 
-            res.redirect(`/home`);
+            res.redirect(`/upload`);
         } catch (error) {
             
             res.render("pages/auth/login", { 
