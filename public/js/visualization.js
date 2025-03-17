@@ -12,6 +12,35 @@ document.addEventListener('DOMContentLoaded', () => {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
+// Create a FeatureGroup to store drawn shapes
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+// Initialize the Draw Control with options for drawing tools
+var drawControl = new L.Control.Draw({
+  draw: {
+    polyline: true,    // Enable polyline drawing
+    polygon: true,     // Enable polygon drawing
+    rectangle: true,   // Enable rectangle drawing
+    circle: true,      // Enable circle drawing
+    marker: true,      // Enable marker drawing
+    circlemarker: false // Disable circlemarker (not in your screenshot)
+  },
+  edit: {
+    featureGroup: drawnItems, // Allow editing of drawn shapes
+    remove: true             // Enable deleting shapes
+  }
+});
+
+// Add the Draw Control to the map
+map.addControl(drawControl);
+
+// Event listener for when a shape is created
+map.on(L.Draw.Event.CREATED, function (event) {
+  var layer = event.layer;
+  drawnItems.addLayer(layer); // Add the drawn shape to the map
+});
+
   console.log('Map initialized'); // Debug log
 
   // Initialize mobilityCoord div with default message
