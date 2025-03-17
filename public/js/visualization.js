@@ -8,38 +8,55 @@ let mobilityNodesData = [];
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Leaflet map
   map = L.map('map').setView([33.6844, 73.0479], 13); // Default to Islamabad
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+  // Define tile layers for different views
+  var earthView = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
+  });
 
-// Create a FeatureGroup to store drawn shapes
-var drawnItems = new L.FeatureGroup();
-map.addLayer(drawnItems);
+  var satelliteView = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  });
 
-// Initialize the Draw Control with options for drawing tools
-var drawControl = new L.Control.Draw({
-  draw: {
-    polyline: true,    // Enable polyline drawing
-    polygon: true,     // Enable polygon drawing
-    rectangle: true,   // Enable rectangle drawing
-    circle: true,      // Enable circle drawing
-    marker: true,      // Enable marker drawing
-    circlemarker: false // Disable circlemarker (not in your screenshot)
-  },
-  edit: {
-    featureGroup: drawnItems, // Allow editing of drawn shapes
-    remove: true             // Enable deleting shapes
-  }
-});
+  // Add the default layer (Earth view) to the map
+  earthView.addTo(map);
 
-// Add the Draw Control to the map
-map.addControl(drawControl);
+  // Create a FeatureGroup to store drawn shapes
+  var drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
 
-// Event listener for when a shape is created
-map.on(L.Draw.Event.CREATED, function (event) {
-  var layer = event.layer;
-  drawnItems.addLayer(layer); // Add the drawn shape to the map
-});
+  // Initialize the Draw Control with options for drawing tools
+  var drawControl = new L.Control.Draw({
+    draw: {
+      polyline: true,    // Enable polyline drawing
+      polygon: true,     // Enable polygon drawing
+      rectangle: true,   // Enable rectangle drawing
+      circle: true,      // Enable circle drawing
+      marker: true,      // Enable marker drawing
+      circlemarker: false // Disable circlemarker
+    },
+    edit: {
+      featureGroup: drawnItems, // Allow editing of drawn shapes
+      remove: true             // Enable deleting shapes
+    }
+  });
+
+  // Add the Draw Control to the map
+  map.addControl(drawControl);
+
+  // Add Layer Control to switch between Earth and Satellite views
+  var baseMaps = {
+    "Earth View": earthView,
+    "Satellite View": satelliteView
+  };
+  L.control.layers(baseMaps, null, { collapsed: false }).addTo(map); // Set collapsed: false to show the control open by default
+
+  // Event listener for when a shape is created
+  map.on(L.Draw.Event.CREATED, function (event) {
+    var layer = event.layer;
+    drawnItems.addLayer(layer); // Add the drawn shape to the map
+  });
 
   console.log('Map initialized'); // Debug log
 
