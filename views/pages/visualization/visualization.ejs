@@ -23,9 +23,10 @@
       </div>
     </div>
 
-    <!-- Horizontal Pane: Two Equal Sections -->
+    <!-- Horizontal Pane: Two Sections -->
     <div class="horizontal-pane bg-light shadow-sm p-3 mb-4">
-      <div class="row g-0">
+      <div class="row g-3">
+        <!-- Added g-3 for margin between columns -->
         <!-- Public Routes and Mobility Nodes -->
         <div class="col-md-4">
           <div class="card shadow-sm h-100">
@@ -34,7 +35,7 @@
             </div>
             <div
               class="card-body overflow-auto"
-              style="max-height: 150px; width: 100%"
+              style="max-height: 250px; width: 100%"
               id="transportFiles"
             >
               <h6 class="mt-0 fw-bold">Public Routes</h6>
@@ -65,6 +66,76 @@
                 style="max-height: 150px; width: 100%"
               >
                 <!-- Content will be populated by fetchFiles -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobility Matrix and Distance Info -->
+        <div class="col-md-8">
+          <div class="card shadow-sm h-100">
+            <div class="card-header text-white files-heading">
+              <h5 class="mb-0">Mobility Matrix and Distance</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="mobilityMatrixSelect" class="form-label"
+                  >Select Mobility Matrix File:</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-table"></i>
+                  </span>
+                  <select
+                    class="form-select"
+                    id="mobilityMatrixSelect"
+                    onchange="loadMobilityMatrix(this.value)"
+                  >
+                    <option value="" selected disabled>
+                      Choose a mobility file...
+                    </option>
+                    <!-- Options will be populated dynamically -->
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="distanceInfo" class="form-label"
+                  >Distance Information:</label
+                >
+                <div
+                  class="input-group"
+                  id="distanceInfo"
+                  style="height: auto; min-height: 100px"
+                >
+                  <span class="input-group-text">
+                    <i class="bi bi-info-circle"></i>
+                  </span>
+                  <div
+                    class="form-control"
+                    style="display: flex; flex-wrap: wrap"
+                  >
+                    <div style="flex: 1 1 50%; padding: 5px">
+                      <p>
+                        <strong>Selected Nodes:</strong>
+                        <span id="selectedNodes">None</span>
+                      </p>
+                      <p>
+                        <strong>Mobility Percentage:</strong>
+                        <span id="mobilityPercentage">N/A</span>
+                      </p>
+                    </div>
+                    <div style="flex: 1 1 50%; padding: 5px">
+                      <p>
+                        <strong>Google Distance:</strong>
+                        <span id="googleDistance">N/A</span>
+                      </p>
+                      <p>
+                        <strong>Direct Distance:</strong>
+                        <span id="directDistance">N/A</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

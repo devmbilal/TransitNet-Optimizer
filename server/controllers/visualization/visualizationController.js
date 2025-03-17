@@ -28,8 +28,30 @@ exports.getFilesByRegion = async (req, res) => {
     }
     const files = await TransportFile.find({ region }, 'fileName type data');
     const transportFiles = files.filter(f => f.type === 'transport');
-    const mobilityFile = files.find(f => f.type === 'mobility-area'); // Changed to mobility-area
-    res.json({ success: true, files: { transportFiles, mobilityFile } });
+    const mobilityFile = files.find(f => f.type === 'mobility-area');
+    const mobilityMatrixFiles = files.filter(f => f.type === 'mobility-matrix');
+    res.json({ success: true, files: { transportFiles, mobilityFile, mobilityMatrixFiles } });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// Add a new endpoint to get mobility matrix data
+exports.getMobilityMatrixData = async (req, res) => {
+  try {
+    const { fileName, region } = req.query;
+    if (!fileName || !region) {
+      return res.json({ success: false, message: 'fileName and region are required' });
+    }
+    const file = await TransportFile.findOne({ fileName, region, type: 'mobility-matrix' });
+    if (!file) {
+      return res.json({ success: false, message: 'Mobility matrix file not found' });
+    }
+    // Ensure data is an array of objects
+    if (!Array.isArray(file.data)) {
+      return res.json({ success: false, message: 'Invalid data format in mobility matrix file' });
+    }
+    res.json({ success: true, matrix: file.data });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }

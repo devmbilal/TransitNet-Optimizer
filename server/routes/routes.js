@@ -33,6 +33,6 @@ router.get('/visualization',isAuthenticated, visualizationController.getVisualiz
 router.get('/visualization/files', isAuthenticated, visualizationController.getFilesByRegion);
 router.get('/visualization/route',isAuthenticated, visualizationController.getRouteData);
 router.get('/visualization/mobility',isAuthenticated, visualizationController.getMobilityData);
-
+router.get('/visualization/mobility-matrix', isAuthenticated, visualizationController.getMobilityMatrixData);
 
 module.exports = router;
