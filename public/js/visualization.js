@@ -152,11 +152,13 @@ function toggleRoute(checkbox) {
             name: stop['Stop Name']
           }));
 
+          // Fetch and draw road-following route instead of direct lines
           const routeCoordinates = await getRoutePath(stops);
           const polyline = L.polyline(routeCoordinates, { color })
-            .bindPopup(`Route: ${fileName.replace('.csv', '')}`)
+            .bindPopup(`Route: ${fileName}`)
             .addTo(layerGroup);
 
+          // Add stop markers
           stops.forEach(stop => {
             L.circleMarker([stop.lat, stop.lng], { color, radius: 5, fillOpacity: 0.8 })
               .bindPopup(`Stop: ${stop.name}<br>Lat: ${stop.lat}<br>Lng: ${stop.lng}`)
@@ -166,6 +168,8 @@ function toggleRoute(checkbox) {
           layerGroup.addTo(map);
           routeLayers[fileName] = layerGroup;
           map.fitBounds(polyline.getBounds());
+        } else {
+          console.error(data.message);
         }
       });
   } else {
@@ -275,6 +279,7 @@ function calculateMetrics(nodes) {
   if (mobilityMatrix) {
     console.log('Checking mobilityMatrix for:', { node1, node2, mobilityMatrix }); // Debug log
     if (mobilityMatrix[node1] && mobilityMatrix[node1][node2] !== undefined) {
+      console.log(mobilityMatrix[node1][node2]);
       mobilityPercentage = parseFloat(mobilityMatrix[node1][node2]) * 100; // Convert to percentage
     } else if (mobilityMatrix[node2] && mobilityMatrix[node2][node1] !== undefined) {
       mobilityPercentage = parseFloat(mobilityMatrix[node2][node1]) * 100; // Convert to percentage
@@ -316,7 +321,7 @@ function updateDistanceInfo(nodes = [], mobilityPercentage = 'N/A', googleDist =
 
 async function getRoutePath(stops) {
   const apiKey = "5b3ce3597851110001cf624887d2455f8705477789fba235d303e0db"; // Replace with your ORS API Key
-  let coordinates = stops.map(stop => [stop.lng, stop.lat]);
+  let coordinates = stops.map(stop => [stop.lng, stop.lat]); // ORS expects [lng, lat]
 
   const url = `https://api.openrouteservice.org/v2/directions/driving-car/geojson`;
 
@@ -336,14 +341,14 @@ async function getRoutePath(stops) {
     const data = await response.json();
 
     if (data && data.features && data.features.length > 0) {
-      return data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+      return data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]); // Convert back to [lat, lng]
     } else {
       console.error("Error fetching route from ORS:", data);
-      return stops.map(s => [s.lat, s.lng]);
+      return stops.map(s => [s.lat, s.lng]); // Fallback to straight lines if ORS fails
     }
   } catch (error) {
     console.error("Failed to fetch ORS route:", error);
-    return stops.map(s => [s.lat, s.lng]);
+    return stops.map(s => [s.lat, s.lng]); // Fallback
   }
 }
 

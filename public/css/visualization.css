@@ -3,26 +3,6 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-.interactive-heading {
-    margin-top: 2rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    width: 100%;
-    text-align: center;
-    gap: 8px;
-    padding: 5px 10px;
-    margin-bottom: 2rem;
-    border-radius: 10px;
-}
-
-.heading-bg {
-    background-color: #2C3E50;
-}
-
-.interactive-heading span {
-    display: inline-block;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
 
 .files-heading {
     background-color: #436281;
@@ -44,6 +24,8 @@ body {
 
 .horizontal-pane .row {
     height: 100%; /* Ensure row takes full height of container */
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .horizontal-pane .card {
