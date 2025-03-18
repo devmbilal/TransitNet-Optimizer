@@ -19,6 +19,56 @@ document.addEventListener('DOMContentLoaded', () => {
     attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
   });
 
+  var openCycleMap = L.tileLayer('https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var transportView = L.tileLayer('https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var landscapeView = L.tileLayer('https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var outdoorsView = L.tileLayer('https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var transportDarkView = L.tileLayer('https://tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var spinalMapView = L.tileLayer('https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var pioneerView = L.tileLayer('https://tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var mobileAtlasView = L.tileLayer('https://tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var neighbourhoodView = L.tileLayer('https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  var atlasView = L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=1f417382cadc4e97a390d059234f6707', {
+    maxZoom: 22,
+    attribution: '© <a href="http://www.thunderforest.com/">Thunderforest</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
   // Add the default layer (Earth view) to the map
   earthView.addTo(map);
 
@@ -45,10 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add the Draw Control to the map
   map.addControl(drawControl);
 
-  // Add Layer Control to switch between Earth and Satellite views
+  // Add Layer Control to switch between views
   var baseMaps = {
     "Earth View": earthView,
-    "Satellite View": satelliteView
+    "Satellite View": satelliteView,
+    "OpenCycleMap": openCycleMap,
+    "Transport View": transportView,
+    "Landscape View": landscapeView,
+    "Outdoors View": outdoorsView,
+    "Transport Dark View": transportDarkView,
+    "Spinal Map View": spinalMapView,
+    "Pioneer View": pioneerView,
+    "Mobile Atlas View": mobileAtlasView,
+    "Neighbourhood View": neighbourhoodView,
+    "Atlas View": atlasView
   };
   L.control.layers(baseMaps, null, { collapsed: false }).addTo(map); // Set collapsed: false to show the control open by default
 
