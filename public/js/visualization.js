@@ -4,6 +4,9 @@ let mobilityLayer = null;
 let selectedMobilityNodes = new Set();
 let mobilityMatrix = null;
 let mobilityNodesData = [];
+let ptEncodingLayer = null;
+let ptEncodingEnabled = false;
+let loadedRoutes = new Map(); // Track loaded route data
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Leaflet map
@@ -146,10 +149,11 @@ function fetchFiles(region) {
       <h6 class="mt-3 fw-bold">Mobility Nodes</h6>
       <div id="mobilityCoord" class="overflow-auto" style="max-height: 150px; width: 100%">
         <p class="text-muted">No mobility file available. Please select a region.</p>
-      </div>
+          </div>
     `;
     mobilityMatrixSelect.innerHTML = '<option value="" selected disabled>Choose a mobility file...</option>';
     updateDistanceInfo();
+    updateAreaEncodingButton();
     return;
   }
 
@@ -193,6 +197,9 @@ function fetchFiles(region) {
           });
         }
         map.setView(getRegionCenter(region), 13);
+        
+        // Update button state after content is loaded
+        updateAreaEncodingButton();
       } else {
         console.error('Fetch failed:', data.message);
       }
@@ -253,10 +260,13 @@ function toggleRoute(checkbox) {
         if (data.success) {
           const layerGroup = L.layerGroup();
           const stops = data.stops.map(stop => ({
-            lat: parseFloat(stop.latitude),
-            lng: parseFloat(stop.longitude),
-            name: stop['Stop Name']
+            lat: parseFloat(stop.latitude || stop.Latitude),
+            lng: parseFloat(stop.longitude || stop.Longitude),
+            name: stop['Stop Name'] || stop['Stop_Name'] || stop.name
           }));
+
+          // Store route data for PT encoding
+          loadedRoutes.set(fileName, { stops, color });
 
           // Fetch and draw road-following route instead of direct lines
           const routeCoordinates = await getRoutePath(stops);
@@ -274,6 +284,14 @@ function toggleRoute(checkbox) {
           layerGroup.addTo(map);
           routeLayers[fileName] = layerGroup;
           map.fitBounds(polyline.getBounds());
+          
+          // Update PT encoding if enabled
+          if (ptEncodingEnabled) {
+            updatePTEncoding();
+          }
+          
+          // Update button state
+          updateAreaEncodingButton();
         } else {
           console.error(data.message);
         }
@@ -283,6 +301,17 @@ function toggleRoute(checkbox) {
       map.removeLayer(routeLayers[fileName]);
       delete routeLayers[fileName];
     }
+    
+    // Remove route data
+    loadedRoutes.delete(fileName);
+    
+    // Update PT encoding if enabled
+    if (ptEncodingEnabled) {
+      updatePTEncoding();
+    }
+    
+    // Update button state
+    updateAreaEncodingButton();
   }
 }
 
@@ -323,6 +352,9 @@ function toggleMobility(checkbox) {
             mobilityLayer.addTo(map);
             map.fitBounds(mobilityLayer.getBounds());
           }
+          
+          // Update button state
+          updateAreaEncodingButton();
         }
       });
   } else {
@@ -332,6 +364,12 @@ function toggleMobility(checkbox) {
       selectedMobilityNodes.clear();
       mobilityNodesData = [];
       updateDistanceInfo();
+      
+      // Disable PT encoding and update button
+      if (ptEncodingEnabled) {
+        toggleAreaEncoding();
+      }
+      updateAreaEncodingButton();
     }
   }
 }
@@ -505,4 +543,215 @@ function getRegionCenter(region) {
     'Faisalabad': [31.4504, 73.1350]
   };
   return centers[region] || [33.6844, 73.0479];
+}
+
+// PT-Region Encoding Functions
+function updateAreaEncodingButton() {
+  const button = document.getElementById('areaEncodingBtn');
+  const status = document.getElementById('encodingStatus');
+  const hasMobilityNodes = mobilityNodesData && mobilityNodesData.length > 0;
+  const hasRoutes = loadedRoutes && loadedRoutes.size > 0;
+  
+  if (hasMobilityNodes && hasRoutes) {
+    button.disabled = false;
+    button.title = 'Click to connect mobility areas served by the same PT routes';
+    status.textContent = `Ready: ${mobilityNodesData.length} nodes, ${loadedRoutes.size} routes loaded`;
+    status.className = 'small text-success';
+  } else {
+    button.disabled = true;
+    if (!hasMobilityNodes && !hasRoutes) {
+      button.title = 'Load mobility nodes and transport routes first';
+      status.textContent = 'Load mobility nodes and transport routes to start';
+      status.className = 'small text-muted';
+    } else if (!hasMobilityNodes) {
+      button.title = 'Load mobility nodes first';
+      status.textContent = 'Load mobility nodes to continue';
+      status.className = 'small text-warning';
+    } else if (!hasRoutes) {
+      button.title = 'Load transport routes first';
+      status.textContent = 'Load transport routes to continue';
+      status.className = 'small text-warning';
+    }
+  }
+}
+
+function updateThresholdValue(value) {
+  const thresholdSpan = document.getElementById('thresholdValue');
+  thresholdSpan.textContent = parseFloat(value).toFixed(1);
+  
+  // Update encoding if it's currently active
+  if (ptEncodingEnabled) {
+    updatePTEncoding();
+  }
+}
+
+function toggleAreaEncoding() {
+  const button = document.getElementById('areaEncodingBtn');
+  const btnText = document.getElementById('encodingBtnText');
+  const status = document.getElementById('encodingStatus');
+  const stats = document.getElementById('encodingStats');
+  
+  if (ptEncodingEnabled) {
+    // Disable PT encoding
+    ptEncodingEnabled = false;
+    button.classList.remove('btn-info');
+    button.classList.add('btn-outline-info');
+    btnText.textContent = 'Start Area Encoding';
+    
+    status.textContent = `Ready: ${mobilityNodesData.length} nodes, ${loadedRoutes.size} routes loaded`;
+    status.className = 'small text-success';
+    stats.textContent = '';
+    
+    // Remove PT encoding layer
+    if (ptEncodingLayer) {
+      map.removeLayer(ptEncodingLayer);
+      ptEncodingLayer = null;
+    }
+  } else {
+    // Enable PT encoding
+    ptEncodingEnabled = true;
+    button.classList.remove('btn-outline-info');
+    button.classList.add('btn-info');
+    btnText.textContent = 'Stop Encoding';
+    
+    status.textContent = 'Generating PT connections...';
+    status.className = 'small text-info';
+    
+    // Generate PT encoding
+    updatePTEncoding();
+  }
+}
+
+function updatePTEncoding() {
+  if (!ptEncodingEnabled || !mobilityNodesData || !loadedRoutes) {
+    return;
+  }
+  
+  console.log('🚀 Generating PT-Region encoding...');
+  
+  // Get threshold from slider
+  const thresholdSlider = document.getElementById('thresholdSlider');
+  const distanceThreshold = parseFloat(thresholdSlider.value);
+  
+  const status = document.getElementById('encodingStatus');
+  const stats = document.getElementById('encodingStats');
+  
+  // Remove existing encoding layer
+  if (ptEncodingLayer) {
+    map.removeLayer(ptEncodingLayer);
+  }
+  
+  ptEncodingLayer = L.layerGroup();
+  const edges = new Set(); // To avoid duplicate edges
+  const routeConnectionCounts = new Map();
+  
+  // Process each loaded route
+  loadedRoutes.forEach((routeData, routeName) => {
+    console.log(`🚌 Processing route: ${routeName}`);
+    
+    const routeNodes = new Set(); // Mobility nodes connected to this route
+    
+    // For each stop in this route
+    routeData.stops.forEach(stop => {
+      // Check distance to all mobility nodes
+      mobilityNodesData.forEach(node => {
+        const distance = calculateHaversineDistance(
+          stop.lat, stop.lng, 
+          node.lat, node.lng
+        );
+        
+        if (distance <= distanceThreshold) {
+          routeNodes.add(node.area);
+        }
+      });
+    });
+    
+    // Store connection count for this route
+    routeConnectionCounts.set(routeName, routeNodes.size);
+    
+    // Create edges between all pairs of nodes in this route
+    const routeNodesList = Array.from(routeNodes);
+    console.log(`   🔗 Connected areas: [${routeNodesList.join(', ')}]`);
+    
+    for (let i = 0; i < routeNodesList.length; i++) {
+      for (let j = i + 1; j < routeNodesList.length; j++) {
+        const node1 = routeNodesList[i];
+        const node2 = routeNodesList[j];
+        const edgeKey = [node1, node2].sort().join('|');
+        
+        if (!edges.has(edgeKey)) {
+          edges.add(edgeKey);
+          
+          // Find the coordinates of the nodes
+          const node1Data = mobilityNodesData.find(n => n.area === node1);
+          const node2Data = mobilityNodesData.find(n => n.area === node2);
+          
+          if (node1Data && node2Data) {
+            // Calculate distance between nodes for popup
+            const nodeDistance = calculateHaversineDistance(
+              node1Data.lat, node1Data.lng,
+              node2Data.lat, node2Data.lng
+            );
+            
+            // Draw edge as a dark, visible line
+            const edge = L.polyline(
+              [[node1Data.lat, node1Data.lng], [node2Data.lat, node2Data.lng]], 
+              {
+                color: '#1a1a1a',      // Dark color for visibility
+                weight: 3,             // Thicker line
+                opacity: 0.8,          // High opacity
+                dashArray: '8, 4'      // Distinct dashed pattern
+              }
+            ).bindPopup(`
+              <strong>PT Connection</strong><br>
+              <strong>${node1}</strong> ↔ <strong>${node2}</strong><br>
+              <small>
+                • Connected by public transport<br>
+                • Distance: ${nodeDistance.toFixed(2)} km<br>
+                • Threshold: ${distanceThreshold} km
+              </small>
+            `);
+            
+            edge.addTo(ptEncodingLayer);
+          }
+        }
+      }
+    }
+  });
+  
+  // Add the encoding layer to the map
+  ptEncodingLayer.addTo(map);
+  
+  // Update status and stats
+  status.textContent = 'PT connections generated successfully!';
+  status.className = 'small text-success';
+  
+  const totalConnectedAreas = new Set();
+  edges.forEach(edge => {
+    const [area1, area2] = edge.split('|');
+    totalConnectedAreas.add(area1);
+    totalConnectedAreas.add(area2);
+  });
+  
+  stats.innerHTML = `
+    <i class="bi bi-check-circle-fill"></i> 
+    ${edges.size} connections • 
+    ${totalConnectedAreas.size} areas connected • 
+    ${distanceThreshold}km threshold
+  `;
+  
+  console.log(`✅ Generated ${edges.size} PT connections with ${distanceThreshold}km threshold`);
+}
+
+// Helper function for distance calculation (Haversine formula)
+function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c; // Distance in kilometers
 }

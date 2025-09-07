@@ -140,6 +140,82 @@
       </div>
     </div>
 
+    <!-- Area Encoding Section -->
+    <div class="horizontal-pane bg-light shadow-sm p-3 mb-4">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-diagram-3"></i> PT-Region Area Encoding
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-md-4">
+                  <label for="thresholdSlider" class="form-label fw-bold">
+                    Distance Threshold: <span id="thresholdValue" class="text-primary">2.0</span> km
+                  </label>
+                  <input 
+                    type="range" 
+                    class="form-range" 
+                    id="thresholdSlider" 
+                    min="0.5" 
+                    max="5.0" 
+                    step="0.1" 
+                    value="2.0"
+                    oninput="updateThresholdValue(this.value)"
+                  >
+                  <div class="d-flex justify-content-between small text-muted">
+                    <span>0.5km</span>
+                    <span>5.0km</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="d-grid">
+                    <button 
+                      id="areaEncodingBtn" 
+                      class="btn btn-outline-info btn-lg"
+                      onclick="toggleAreaEncoding()" 
+                      disabled
+                      title="Load mobility nodes and routes first"
+                    >
+                      <i class="bi bi-diagram-3"></i> 
+                      <span id="encodingBtnText">Start Area Encoding</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="text-center">
+                    <div class="badge bg-secondary fs-6 mb-2">
+                      <i class="bi bi-info-circle"></i> Status
+                    </div>
+                    <div id="encodingStatus" class="small text-muted">
+                      Ready to connect mobility areas via PT routes
+                    </div>
+                    <div id="encodingStats" class="small text-primary mt-1">
+                      <!-- Connection stats will appear here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row mt-3">
+                <div class="col-12">
+                  <div class="alert alert-info small mb-0">
+                    <i class="bi bi-lightbulb"></i>
+                    <strong>How it works:</strong> 
+                    This feature connects mobility areas that are served by the same public transport routes. 
+                    Areas within the threshold distance of the same route stops will be connected with dark edges.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Full-Screen Map -->
     <div class="map-container">
       <div class="card shadow-sm h-100">
