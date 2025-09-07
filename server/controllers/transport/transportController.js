@@ -1,6 +1,6 @@
 const TransportFile = require('../../models/transportFile/TransportFile');
 const { parse } = require('csv-parse/sync');
-
+const { enrichMobilityAreas } = require('../../services/enrichMobilityAreas');
 const STATIC_REGIONS = ['Islamabad', 'Lahore', 'Karachi', 'Faisalabad'];
 
 // Render upload page
@@ -146,6 +146,14 @@ exports.uploadFiles = async (req, res) => {
           data: csvData
         });
       }
+      
+      // Trigger enrichment process asynchronously after mobility area upload/update
+      console.log(`Triggering mobility area enrichment for ${region}`);
+      enrichMobilityAreas(region).then(result => {
+        console.log(`Mobility area enrichment completed for ${region}:`, result);
+      }).catch(error => {
+        console.error(`Error in mobility area enrichment for ${region}:`, error.message);
+      });
     }
 
     // Process multiple mobility matrix files

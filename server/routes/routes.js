@@ -5,6 +5,7 @@ const homeController = require("../controllers/home/homeController");
 const aboutController = require("../controllers/about/aboutController");
 const transportController = require("../controllers/transport/transportController");
 const visualizationController = require("../controllers/visualization/visualizationController");
+const distanceController = require("../controllers/distance/distanceController");
 
 const router = express.Router();
 
@@ -34,5 +35,9 @@ router.get('/visualization/files', isAuthenticated, visualizationController.getF
 router.get('/visualization/route',isAuthenticated, visualizationController.getRouteData);
 router.get('/visualization/mobility',isAuthenticated, visualizationController.getMobilityData);
 router.get('/visualization/mobility-matrix', isAuthenticated, visualizationController.getMobilityMatrixData);
+
+//Distance API
+router.get('/api/distance', isAuthenticated, distanceController.getCachedDistance);
+router.get('/api/mobility/distance', isAuthenticated, distanceController.getCachedDistance);
 
 module.exports = router;

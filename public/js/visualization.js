@@ -394,9 +394,47 @@ function calculateMetrics(nodes) {
     }
   }
 
-  getGoogleDistance(lat1, lon1, lat2, lon2).then(googleDist => {
-    updateDistanceInfo(nodes, mobilityPercentage, googleDist, directDist.toFixed(2));
+  // Try to get road distance from enriched mobility data first
+  getRoadDistanceFromEnrichedData(node1, node2).then(roadDistance => {
+    if (roadDistance !== null && roadDistance !== 'N/A') {
+      console.log('Using road distance from enriched mobility data:', roadDistance, 'km');
+      updateDistanceInfo(nodes, mobilityPercentage, roadDistance, directDist.toFixed(2));
+    } else {
+      console.log('No road distance in enriched data, falling back to API');
+      // Fallback to API if not found in enriched data
+      getGoogleDistance(lat1, lon1, lat2, lon2).then(googleDist => {
+        updateDistanceInfo(nodes, mobilityPercentage, googleDist, directDist.toFixed(2));
+      });
+    }
   });
+}
+
+// New function to get road distance from enriched mobility data
+async function getRoadDistanceFromEnrichedData(origin, destination) {
+  try {
+    const region = document.getElementById('regionSelect').value;
+    if (!region) return null;
+    
+    console.log('Fetching enriched distance data for:', origin, '->', destination);
+    const response = await fetch(`/api/mobility/distance?region=${encodeURIComponent(region)}&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`);
+    
+    if (!response.ok) {
+      console.warn('Failed to fetch distance from enriched data:', response.status);
+      return null;
+    }
+    
+    const data = await response.json();
+    console.log('Enriched distance data response:', data);
+    
+    if (data.success && data.road_distance_km !== null && data.road_distance_km !== undefined) {
+      return data.road_distance_km;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching distance from enriched data:', error);
+    return null;
+  }
 }
 
 async function getGoogleDistance(lat1, lon1, lat2, lon2) {
@@ -408,7 +446,7 @@ async function getGoogleDistance(lat1, lon1, lat2, lon2) {
     const data = await response.json();
     return data.features[0].properties.segments[0].distance / 1000; // Convert to km
   } catch (error) {
-    console.error('Error fetching Google distance:', error);
+    console.error('Error fetching API distance:', error);
     return 'N/A';
   }
 }
