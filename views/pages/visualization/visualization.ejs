@@ -1,37 +1,17 @@
-<!-- Header Bar with Region Selection -->
-<nav class="navbar navbar-expand-lg navbar-light bg-primary mb-3">
-  <div class="container-fluid">
-    <span class="navbar-brand text-white mb-0 h1">
-      <i class="bi bi-bar-chart-line"></i> <%= locals.pageName %>
-    </span>
-    <div class="d-flex align-items-center">
-      <label class="text-white me-2"><i class="bi bi-geo-alt"></i> Region:</label>
-      <select
-        class="form-select form-select-sm"
-        id="regionSelect"
-        onchange="fetchFiles(this.value)"
-        style="min-width: 200px;"
-      >
-        <option value="" selected disabled>Choose a region...</option>
-        <% regions.forEach(region => { %>
-        <option value="<%= region %>"><%= region %></option>
-        <% }) %>
-      </select>
-    </div>
-  </div>
-</nav>
 
 <!-- Main Content Layout -->
 <div class="row">
   <!-- Map Area -->
   <div class="col-md-8">
-    <div class="position-relative" style="height: 600px;">
-      <div id="map" class="h-100 w-100 border rounded"></div>
-      <!-- Map Loading Overlay -->
-      <div id="mapOverlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75 rounded" style="z-index: 1000; display: none !important;">
-        <div class="text-center">
-          <div class="spinner-border text-primary" role="status"></div>
-          <div class="mt-2">Loading map data...</div>
+    <div class="p-3">
+      <div class="position-relative" style="height: 600px;">
+        <div id="map" class="h-100 w-100 border rounded"></div>
+        <!-- Map Loading Overlay -->
+        <div id="mapOverlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75 rounded" style="z-index: 1000; display: none !important;">
+          <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="mt-2">Loading map data...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -42,6 +22,30 @@
     <div class="" style="height: 600px; overflow-y: auto;">
       <div class="p-3">
           
+          <!-- Region Selection Section -->
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-dark text-white py-2">
+              <h6 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Region Selection</h6>
+            </div>
+            <div class="card-body p-3">
+              <div class="mb-0">
+                <label for="regionSelect" class="form-label small fw-bold">
+                  Choose Region:
+                </label>
+                <select
+                  class="form-select form-select-sm"
+                  id="regionSelect"
+                  onchange="fetchFiles(this.value)"
+                >
+                  <option value="" selected disabled>Choose a region...</option>
+                  <% regions.forEach(region => { %>
+                  <option value="<%= region %>"><%= region %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <!-- Transport Routes Section -->
           <div class="card mb-3 border-0 shadow-sm">
             <div class="card-header bg-primary text-white py-2 d-flex justify-content-between align-items-center">
