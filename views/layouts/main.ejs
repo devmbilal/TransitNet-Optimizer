@@ -31,6 +31,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/upload.css" />
     <link rel="stylesheet" href="/css/visualization.css" />
+    <link rel="stylesheet" href="/css/routeCreation.css" />
   </head>
   <body>
     <%- include('../partials/header.ejs') %>
@@ -49,11 +50,14 @@
     ></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Leaflet Polyline Decorator -->
-    <script src="https://unpkg.com/leaflet.polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
     <!-- Leaflet.Draw JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-    <!-- visualization JS -->
+    <!-- jQuery UI for draggable/sortable -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <!-- visualization JS - will check for appropriate containers before running -->
     <script src="/js/visualization.js"></script>
+    <!-- Route Creation JS - will check for appropriate containers before running -->
+    <script src="/js/routeCreation.js"></script>
   </body>
 </html>

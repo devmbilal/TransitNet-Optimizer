@@ -1,0 +1,553 @@
+/* Route Creation Specific Styles */
+
+/* General body styles for route creation page */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Enhanced header styling */
+.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+}
+
+/* Card enhancements */
+.card {
+    border: none !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+/* Interactive map container */
+#routeMap {
+    border-radius: 0 0 12px 12px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Custom scrollbar styling */
+[style*="overflow-y: auto"]::-webkit-scrollbar {
+    width: 6px;
+}
+
+[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+[style*="overflow-y: auto"]::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+/* Specific scrollbar styling for route sections */
+.card-body[style*="overflow-y: auto"]::-webkit-scrollbar {
+    width: 4px;
+}
+
+.card-body[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.card-body[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+    background: rgba(108, 117, 125, 0.3);
+    border-radius: 2px;
+}
+
+.card-body[style*="overflow-y: auto"]::-webkit-scrollbar-thumb:hover {
+    background: rgba(108, 117, 125, 0.5);
+}
+
+/* Scrollable content indicators */
+.card-body[style*="overflow-y: auto"] {
+    position: relative;
+}
+
+/* Fade effect at bottom of scrollable areas */
+.card-body[style*="overflow-y: auto"]::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.8));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card-body[style*="overflow-y: auto"]:hover::after {
+    opacity: 1;
+}
+
+/* Route list item styling */
+.route-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.route-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+    transform: translateX(2px);
+}
+
+.route-item.active {
+    border-color: #28a745;
+    background: #f8fff9;
+    box-shadow: 0 0 0 2px rgba(40,167,69,0.25);
+}
+
+.route-item .route-name {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 4px;
+}
+
+.route-item .route-info {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.route-item .route-actions {
+    margin-top: 8px;
+}
+
+.route-item .route-actions .btn {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    margin-right: 4px;
+}
+
+/* Draggable stops list styling */
+#sortableStopsList {
+    min-height: 100px;
+}
+
+.stop-item {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 6px;
+    cursor: move;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.stop-item:hover {
+    border-color: #17a2b8;
+    box-shadow: 0 2px 8px rgba(23,162,184,0.15);
+}
+
+.stop-item.ui-sortable-helper {
+    transform: rotate(3deg);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    z-index: 1000;
+}
+
+.stop-item .stop-number {
+    background: #17a2b8;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.stop-item .stop-content {
+    margin-left: 20px;
+}
+
+.stop-item .stop-name {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 2px;
+}
+
+.stop-item .stop-coordinates {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-family: 'Courier New', monospace;
+}
+
+.stop-item .stop-actions {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.stop-item .stop-actions .btn {
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    margin-left: 2px;
+}
+
+/* Form enhancements */
+.form-control:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 0.25rem rgba(23,162,184,0.25);
+}
+
+.form-select:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 0.25rem rgba(23,162,184,0.25);
+}
+
+/* Button enhancements */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0.4rem 0.8rem;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-sm {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* Loading overlay enhancements */
+#mapOverlay {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* Modal enhancements */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    border-radius: 12px 12px 0 0;
+    border: none;
+    padding: 1.25rem;
+}
+
+.modal-body {
+    padding: 1.25rem;
+}
+
+.modal-footer {
+    border-radius: 0 0 12px 12px;
+    border: none;
+    padding: 1rem 1.25rem;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.bounce-in {
+    animation: bounceIn 0.4s ease-out;
+}
+
+/* Drag and drop visual feedback */
+.sortable-placeholder {
+    height: 60px;
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: 2px dashed #2196f3;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    position: relative;
+}
+
+.sortable-placeholder::after {
+    content: '↓ Drop here ↓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #2196f3;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Status indicators */
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.status-indicator.active {
+    background: #28a745;
+    box-shadow: 0 0 0 2px rgba(40,167,69,0.3);
+}
+
+.status-indicator.inactive {
+    background: #6c757d;
+}
+
+.status-indicator.editing {
+    background: #ffc107;
+    box-shadow: 0 0 0 2px rgba(255,193,7,0.3);
+}
+
+/* Route polyline customization */
+.leaflet-interactive {
+    cursor: pointer !important;
+}
+
+/* Marker customization */
+.custom-marker {
+    background: #17a2b8;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    width: 30px !important;
+    height: 30px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.custom-marker.start-marker {
+    background: #28a745;
+}
+
+.custom-marker.end-marker {
+    background: #dc3545;
+}
+
+.custom-marker .marker-number {
+    display: inline-block;
+    line-height: 1;
+}
+
+/* Fix for marker icon display */
+.custom-marker i {
+    font-size: 18px;
+    color: white;
+}
+
+/* Leaflet popup styling */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.leaflet-popup-content {
+    margin: 8px 12px;
+    font-size: 13px;
+}
+
+/* Map controls styling */
+.leaflet-control-layers {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.leaflet-control-zoom {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.leaflet-control-zoom a {
+    border-radius: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .col-md-3 {
+        margin-bottom: 1rem;
+    }
+    
+    .col-md-6 {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .stop-item .stop-number {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        left: -6px;
+    }
+    
+    .stop-item .stop-content {
+        margin-left: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .p-3 {
+        padding: 1rem !important;
+    }
+    
+    .card-body {
+        padding: 0.5rem;
+    }
+    
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+}
+
+/* Professional color scheme */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+/* Utility classes */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.cursor-grab {
+    cursor: grab !important;
+}
+
+.cursor-grabbing {
+    cursor: grabbing !important;
+}
+
+/* Loading states */
+.loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+    border-radius: 4px;
+    height: 20px;
+    margin-bottom: 8px;
+}
+
+@keyframes loading-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Toast notifications */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1055;
+}
+
+.toast {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.toast-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.toast-error {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+    color: white;
+}
+
+.toast-info {
+    background: linear-gradient(135deg, #17a2b8, #20c997);
+    color: white;
+}

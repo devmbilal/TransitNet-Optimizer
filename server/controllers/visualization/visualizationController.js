@@ -6,13 +6,13 @@ exports.getVisualizationPage = async (req, res) => {
     const regions = await TransportFile.distinct('region');
 
     const locals = {
-      pageName: 'Layered Visialization'
+      pageName: 'Visualization'
     };
 
     res.render('pages/visualization/visualization', { locals, regions, files: null });
   } catch (error) {
     const locals = {
-      pageName: 'Data Visualization'
+      pageName: 'Visualization'
     };
 
     res.render('pages/visualization/visualization', { locals, regions: [], files: null, error: error.message });

@@ -6,6 +6,7 @@ const aboutController = require("../controllers/about/aboutController");
 const transportController = require("../controllers/transport/transportController");
 const visualizationController = require("../controllers/visualization/visualizationController");
 const distanceController = require("../controllers/distance/distanceController");
+const routeController = require("../controllers/route/routeController");
 
 const router = express.Router();
 
@@ -35,6 +36,16 @@ router.get('/visualization/files', isAuthenticated, visualizationController.getF
 router.get('/visualization/route',isAuthenticated, visualizationController.getRouteData);
 router.get('/visualization/mobility',isAuthenticated, visualizationController.getMobilityData);
 router.get('/visualization/mobility-matrix', isAuthenticated, visualizationController.getMobilityMatrixData);
+
+//Route Creation
+router.get('/route-creation', isAuthenticated, routeController.getRouteCreationPage);
+router.get('/route-creation/routes', isAuthenticated, routeController.getRoutesByRegion);
+router.get('/route-creation/route/:id', isAuthenticated, routeController.getRouteById);
+router.post('/route-creation/create', isAuthenticated, routeController.createRoute);
+router.post('/route-creation/update/:id', isAuthenticated, routeController.updateRoute);
+router.post('/route-creation/duplicate/:id', isAuthenticated, routeController.duplicateRoute);
+router.delete('/route-creation/delete/:id', isAuthenticated, routeController.deleteRoute);
+router.get('/route-creation/export/:id', isAuthenticated, routeController.exportRouteAsCSV);
 
 //Distance API
 router.get('/api/distance', isAuthenticated, distanceController.getCachedDistance);

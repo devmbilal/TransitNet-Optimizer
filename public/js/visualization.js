@@ -13,6 +13,13 @@ let allRoutesChecked = false;
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Leaflet map with a slight delay to ensure container is ready
   setTimeout(() => {
+    // Check if map container exists
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) {
+      console.log('Visualization map container not found, skipping initialization');
+      return;
+    }
+    
     map = L.map('map').setView([33.6844, 73.0479], 13); // Default to Islamabad
     initializeMap();
   }, 100);
@@ -20,9 +27,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initializeMap() {
 
-  // Define tile layers for different views
+  // Define tile layers for different views with backup servers
   var earthView = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18,
+    subdomains: ['a', 'b', 'c'],
+    retryDelay: 1000,
+    retryCount: 3
+  });
+  
+  // Add backup tile server in case primary fails
+  earthView.on('tileerror', function(error) {
+    console.log('Primary tile server failed, trying backup...');
+    // Try CartoDB as backup
+    var backupLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    });
+    map.removeLayer(earthView);
+    backupLayer.addTo(map);
   });
 
   var satelliteView = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
