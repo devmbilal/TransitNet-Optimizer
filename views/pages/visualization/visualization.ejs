@@ -1,231 +1,183 @@
-<body>
-  <div class="container-fluid p-0">
-    <!-- Region Dropdown -->
-    <div class="p-3 select-region">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <div class="input-group">
-            <span class="input-group-text">
-              <i class="bi bi-geo-alt"></i> Select Region:
-            </span>
-            <select
-              class="form-select"
-              id="regionSelect"
-              onchange="fetchFiles(this.value)"
-            >
-              <option value="" selected disabled>Choose a region...</option>
-              <% regions.forEach(region => { %>
-              <option value="<%= region %>"><%= region %></option>
-              <% }) %>
-            </select>
-          </div>
-        </div>
-      </div>
+<!-- Header Bar with Region Selection -->
+<nav class="navbar navbar-expand-lg navbar-light bg-primary mb-3">
+  <div class="container-fluid">
+    <span class="navbar-brand text-white mb-0 h1">
+      <i class="bi bi-bar-chart-line"></i> <%= locals.pageName %>
+    </span>
+    <div class="d-flex align-items-center">
+      <label class="text-white me-2"><i class="bi bi-geo-alt"></i> Region:</label>
+      <select
+        class="form-select form-select-sm"
+        id="regionSelect"
+        onchange="fetchFiles(this.value)"
+        style="min-width: 200px;"
+      >
+        <option value="" selected disabled>Choose a region...</option>
+        <% regions.forEach(region => { %>
+        <option value="<%= region %>"><%= region %></option>
+        <% }) %>
+      </select>
     </div>
+  </div>
+</nav>
 
-    <!-- Horizontal Pane: Two Sections -->
-    <div class="horizontal-pane bg-light shadow-sm p-3 mb-4">
-      <div class="row g-3">
-        <!-- Added g-3 for margin between columns -->
-        <!-- Public Routes and Mobility Nodes -->
-        <div class="col-md-4">
-          <div class="card shadow-sm h-100">
-            <div class="card-header text-white files-heading">
-              <h5 class="mb-0">Public Routes and Mobility Nodes</h5>
-            </div>
-            <div
-              class="card-body overflow-auto"
-              style="max-height: 250px; width: 100%"
-              id="transportFiles"
-            >
-              <h6 class="mt-0 fw-bold">Public Routes</h6>
-              <% if (files && files.transportFiles.length > 0) { %> <%
-              files.transportFiles.forEach((file, index) => { %>
-              <div class="form-check mb-2 w-100">
-                <input
-                  class="form-check-input route-checkbox"
-                  type="checkbox"
-                  id="route<%= index %>"
-                  data-file="<%= file.fileName %>"
-                  data-color="<%= ['#FF0000', '#0000FF', '#008000', '#800080', '#FFA500', '#00CED1', '#FF4500', '#FFD700', '#6A5ACD', '#20B2AA', '#DC143C', '#32CD32', '#9932CC', '#FF69B4', '#00FF7F', '#4682B4', '#DAA520', '#8B008B', '#ADFF2F', '#4169E1'][index % 20] %>"
-                  onchange="toggleRoute(this)"
-                />
-                <label class="form-check-label w-100" for="route<%= index %>">
-                  <%= file.fileName %>
-                </label>
-              </div>
-              <% }) %> <% } else { %>
-              <p class="text-muted">No transport files available.</p>
-              <% } %>
-
-              <!-- Mobility Coordinates moved here -->
-              <h6 class="mt-3 fw-bold">Mobility Nodes</h6>
-              <div
-                id="mobilityCoord"
-                class="overflow-auto"
-                style="max-height: 150px; width: 100%"
-              >
-                <!-- Content will be populated by fetchFiles -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mobility Insights -->
-        <div class="col-md-8">
-          <div class="card shadow-sm h-100">
-            <div class="card-header text-white files-heading">
-              <h5 class="mb-0">Mobility Insights</h5>
-            </div>
-            <div class="card-body">
-              <div class="mb-3">
-                <label for="mobilityMatrixSelect" class="form-label fw-bold"
-                  >Select Mobility Matrix File:</label
-                >
-                <div class="input-group">
-                  <span class="input-group-text">
-                    <i class="bi bi-table"></i>
-                  </span>
-                  <select
-                    class="form-select"
-                    id="mobilityMatrixSelect"
-                    onchange="loadMobilityMatrix(this.value)"
-                  >
-                    <option value="" selected disabled>
-                      Choose a mobility file...
-                    </option>
-                    <!-- Options will be populated dynamically -->
-                  </select>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div
-                  class="input-group"
-                  id="distanceInfo"
-                  style="height: auto; min-height: 100px"
-                >
-                  <span class="input-group-text">
-                    <i class="bi bi-info-circle"></i>
-                  </span>
-                  <div
-                    class="form-control"
-                    style="display: flex; flex-wrap: wrap"
-                  >
-                    <div style="flex: 1 1 50%; padding: 5px">
-                      <p>
-                        <strong>Selected Nodes:</strong>
-                        <span id="selectedNodes">None</span>
-                      </p>
-                      <p>
-                        <strong>Mobility Percentage:</strong>
-                        <span id="mobilityPercentage">N/A</span>
-                      </p>
-                    </div>
-                    <div style="flex: 1 1 50%; padding: 5px">
-                      <p>
-                        <strong>Travel Distance:</strong>
-                        <span id="googleDistance">N/A</span>
-                      </p>
-                      <p>
-                        <strong>Direct Distance:</strong>
-                        <span id="directDistance">N/A</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Area Encoding Section -->
-    <div class="horizontal-pane bg-light shadow-sm p-3 mb-4">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card shadow-sm">
-            <div class="card-header bg-info text-white">
-              <h5 class="mb-0">
-                <i class="bi bi-diagram-3"></i> PT-Region Area Encoding
-              </h5>
-            </div>
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-md-4">
-                  <label for="thresholdSlider" class="form-label fw-bold">
-                    Distance Threshold: <span id="thresholdValue" class="text-primary">2.0</span> km
-                  </label>
-                  <input 
-                    type="range" 
-                    class="form-range" 
-                    id="thresholdSlider" 
-                    min="0.5" 
-                    max="5.0" 
-                    step="0.1" 
-                    value="2.0"
-                    oninput="updateThresholdValue(this.value)"
-                  >
-                  <div class="d-flex justify-content-between small text-muted">
-                    <span>0.5km</span>
-                    <span>5.0km</span>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="d-grid">
-                    <button 
-                      id="areaEncodingBtn" 
-                      class="btn btn-outline-info btn-lg"
-                      onclick="toggleAreaEncoding()" 
-                      disabled
-                      title="Load mobility nodes and routes first"
-                    >
-                      <i class="bi bi-diagram-3"></i> 
-                      <span id="encodingBtnText">Start Area Encoding</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="text-center">
-                    <div class="badge bg-secondary fs-6 mb-2">
-                      <i class="bi bi-info-circle"></i> Status
-                    </div>
-                    <div id="encodingStatus" class="small text-muted">
-                      Ready to connect mobility areas via PT routes
-                    </div>
-                    <div id="encodingStats" class="small text-primary mt-1">
-                      <!-- Connection stats will appear here -->
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="row mt-3">
-                <div class="col-12">
-                  <div class="alert alert-info small mb-0">
-                    <i class="bi bi-lightbulb"></i>
-                    <strong>How it works:</strong> 
-                    This feature connects mobility areas that are served by the same public transport routes. 
-                    Areas within the threshold distance of the same route stops will be connected with dark edges.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Full-Screen Map -->
-    <div class="map-container">
-      <div class="card shadow-sm h-100">
-        <div class="card-header bg-success text-white">
-          <h5 class="mb-0">Map View</h5>
-        </div>
-        <div class="card-body p-0">
-          <div id="map" class="map-placeholder"></div>
+<!-- Main Content Layout -->
+<div class="row">
+  <!-- Map Area -->
+  <div class="col-md-8">
+    <div class="position-relative" style="height: 600px;">
+      <div id="map" class="h-100 w-100 border rounded"></div>
+      <!-- Map Loading Overlay -->
+      <div id="mapOverlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75 rounded" style="z-index: 1000; display: none !important;">
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status"></div>
+          <div class="mt-2">Loading map data...</div>
         </div>
       </div>
     </div>
   </div>
-</body>
+
+  <!-- Right Side: Controls Panel -->
+  <div class="col-md-4">
+    <div class="" style="height: 600px; overflow-y: auto;">
+      <div class="p-3">
+          
+          <!-- Transport Routes Section -->
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-2 d-flex justify-content-between align-items-center">
+              <h6 class="mb-0"><i class="bi bi-bus-front"></i> Public Transport Routes</h6>
+              <button 
+                id="checkAllRoutesBtn" 
+                class="btn btn-outline-light btn-sm" 
+                onclick="toggleAllRoutes()" 
+                style="display: none;"
+                title="Check/Uncheck all routes"
+              >
+                <i class="bi bi-check-all"></i> All
+              </button>
+            </div>
+            <div class="card-body p-3" id="transportRoutesContainer" style="max-height: 300px; overflow-y: auto;">
+              <div class="text-muted text-center py-3">
+                <i class="bi bi-info-circle"></i> Select a region to load routes
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobility Nodes Section -->
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-success text-white py-2">
+              <h6 class="mb-0"><i class="bi bi-geo"></i> Mobility Areas</h6>
+            </div>
+            <div class="card-body p-3" id="mobilityNodesContainer">
+              <div class="text-muted text-center py-3">
+                <i class="bi bi-info-circle"></i> Select a region to load mobility areas
+              </div>
+            </div>
+          </div>
+
+          <!-- Area Encoding Section -->
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-info text-white py-2">
+              <h6 class="mb-0"><i class="bi bi-diagram-3"></i> Area Encoding</h6>
+            </div>
+            <div class="card-body p-3">
+              <div class="mb-3">
+                <label for="thresholdSlider" class="form-label small fw-bold">
+                  Distance Threshold: <span id="thresholdValue" class="text-info">2.0</span> km
+                </label>
+                <input 
+                  type="range" 
+                  class="form-range" 
+                  id="thresholdSlider" 
+                  min="0.5" 
+                  max="5.0" 
+                  step="0.1" 
+                  value="2.0"
+                  oninput="updateThresholdValue(this.value)"
+                >
+                <div class="d-flex justify-content-between small text-muted">
+                  <span>0.5km</span>
+                  <span>5.0km</span>
+                </div>
+              </div>
+              <div class="d-grid mb-3">
+                <button 
+                  id="areaEncodingBtn" 
+                  class="btn btn-outline-info"
+                  onclick="toggleAreaEncoding()" 
+                  disabled
+                  title="Load mobility nodes and routes first"
+                >
+                  <i class="bi bi-diagram-3"></i> 
+                  <span id="encodingBtnText">Start Area Encoding</span>
+                </button>
+              </div>
+              <div class="text-center">
+                <div id="encodingStatus" class="small text-muted mb-1">
+                  Load data to start area encoding
+                </div>
+                <div id="encodingStats" class="small text-info">
+                  <!-- Connection stats will appear here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobility Matrix Section -->
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark py-2">
+              <h6 class="mb-0"><i class="bi bi-table"></i> OD Matrix Analysis</h6>
+            </div>
+            <div class="card-body p-3">
+              <div class="mb-3">
+                <label for="mobilityMatrixSelect" class="form-label small fw-bold">
+                  Select Matrix File:
+                </label>
+                <select
+                  class="form-select form-select-sm"
+                  id="mobilityMatrixSelect"
+                  onchange="loadMobilityMatrix(this.value)"
+                >
+                  <option value="" selected disabled>
+                    Choose matrix file...
+                  </option>
+                  <!-- Options will be populated dynamically -->
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Node Analysis Section -->
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-header bg-secondary text-white py-2">
+              <h6 class="mb-0"><i class="bi bi-calculator"></i> Node Analysis</h6>
+            </div>
+            <div class="card-body p-3">
+              <div class="row g-2 small">
+                <div class="col-6">
+                  <div class="text-muted">Selected Nodes:</div>
+                  <div id="selectedNodes" class="fw-bold">None</div>
+                </div>
+                <div class="col-6">
+                  <div class="text-muted">Mobility %:</div>
+                  <div id="mobilityPercentage" class="fw-bold text-warning">N/A</div>
+                </div>
+                <div class="col-6">
+                  <div class="text-muted">Travel Distance:</div>
+                  <div id="googleDistance" class="fw-bold text-primary">N/A</div>
+                </div>
+                <div class="col-6">
+                  <div class="text-muted">Direct Distance:</div>
+                  <div id="directDistance" class="fw-bold text-success">N/A</div>
+                </div>
+              </div>
+              <div class="mt-2 text-muted small">
+                <i class="bi bi-info-circle"></i> Click 2 mobility areas to analyze
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+</div>

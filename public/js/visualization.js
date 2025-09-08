@@ -7,10 +7,18 @@ let mobilityNodesData = [];
 let ptEncodingLayer = null;
 let ptEncodingEnabled = false;
 let loadedRoutes = new Map(); // Track loaded route data
+// Layout variables removed
+let allRoutesChecked = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Leaflet map
-  map = L.map('map').setView([33.6844, 73.0479], 13); // Default to Islamabad
+  // Initialize Leaflet map with a slight delay to ensure container is ready
+  setTimeout(() => {
+    map = L.map('map').setView([33.6844, 73.0479], 13); // Default to Islamabad
+    initializeMap();
+  }, 100);
+});
+
+function initializeMap() {
 
   // Define tile layers for different views
   var earthView = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -122,40 +130,48 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   console.log('Map initialized'); // Debug log
-
-  // Initialize mobilityCoord div with default message
-  const mobilityCoordDiv = document.getElementById('mobilityCoord');
-  if (mobilityCoordDiv) {
-    mobilityCoordDiv.innerHTML = '<p class="text-muted">No mobility file available. Please select a region.</p>';
-  } else {
-    console.error('mobilityCoord div not found');
-  }
-});
+}
 
 function fetchFiles(region) {
-  const transportFilesDiv = document.getElementById('transportFiles');
-  const mobilityCoordDiv = document.getElementById('mobilityCoord');
+  const transportRoutesContainer = document.getElementById('transportRoutesContainer');
+  const mobilityNodesContainer = document.getElementById('mobilityNodesContainer');
   const mobilityMatrixSelect = document.getElementById('mobilityMatrixSelect');
 
-  if (!transportFilesDiv || !mobilityCoordDiv || !mobilityMatrixSelect) {
-    console.error('One or more DOM elements not found:', { transportFilesDiv, mobilityCoordDiv, mobilityMatrixSelect });
+  if (!transportRoutesContainer || !mobilityNodesContainer || !mobilityMatrixSelect) {
+    console.error('One or more DOM elements not found');
     return;
   }
 
   if (!region) {
-    transportFilesDiv.innerHTML = `
-      <h6 class="mt-0 fw-bold">Public Routes</h6>
-      <p class="text-muted">No transport files available. Please select a region.</p>
-      <h6 class="mt-3 fw-bold">Mobility Nodes</h6>
-      <div id="mobilityCoord" class="overflow-auto" style="max-height: 150px; width: 100%">
-        <p class="text-muted">No mobility file available. Please select a region.</p>
-          </div>
+    transportRoutesContainer.innerHTML = `
+      <div class="text-muted text-center py-3">
+        <i class="bi bi-info-circle"></i> Select a region to load routes
+      </div>
     `;
-    mobilityMatrixSelect.innerHTML = '<option value="" selected disabled>Choose a mobility file...</option>';
+    mobilityNodesContainer.innerHTML = `
+      <div class="text-muted text-center py-3">
+        <i class="bi bi-info-circle"></i> Select a region to load mobility areas
+      </div>
+    `;
+    mobilityMatrixSelect.innerHTML = '<option value="" selected disabled>Choose matrix file...</option>';
     updateDistanceInfo();
     updateAreaEncodingButton();
     return;
   }
+
+  // Show loading state
+  transportRoutesContainer.innerHTML = `
+    <div class="text-center py-3">
+      <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+      <div class="small mt-1">Loading routes...</div>
+    </div>
+  `;
+  mobilityNodesContainer.innerHTML = `
+    <div class="text-center py-3">
+      <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+      <div class="small mt-1">Loading areas...</div>
+    </div>
+  `;
 
   console.log('Fetching files for region:', region); // Debug log
   fetch(`/visualization/files?region=${region}`)
@@ -168,31 +184,94 @@ function fetchFiles(region) {
     .then(data => {
       console.log('Fetched data:', data); // Debug log
       if (data.success) {
-        transportFilesDiv.innerHTML = `
-          <h6 class="mt-0 fw-bold">Public Routes</h6>
-          ${data.files.transportFiles && data.files.transportFiles.length > 0 ? 
-            data.files.transportFiles.map((file, index) => `
-              <div class="form-check mb-2 w-100">
-                <input class="form-check-input route-checkbox" type="checkbox" id="route${index}" data-file="${file.fileName}" data-color="${['#FF0000', '#0000FF', '#008000', '#800080', '#FFA500', '#00CED1', '#FF4500', '#FFD700', '#6A5ACD', '#20B2AA', '#DC143C', '#32CD32', '#9932CC', '#FF69B4', '#00FF7F', '#4682B4', '#DAA520', '#8B008B', '#ADFF2F', '#4169E1'][index % 20]}" onchange="toggleRoute(this)" />
-                <label class="form-check-label w-100" for="route${index}">${file.fileName}</label>
-              </div>
-            `).join('') : '<p class="text-muted">No transport files available.</p>'}
-          <h6 class="mt-3 fw-bold">Mobility Nodes</h6>
-          <div id="mobilityCoord" class="overflow-auto" style="max-height: 150px; width: 100%">
-            ${data.files.mobilityFile ? `
-              <div class="form-check mb-2 w-100">
-                <input class="form-check-input mobility-checkbox" type="checkbox" id="mobility" data-file="${data.files.mobilityFile.fileName}" onchange="toggleMobility(this)" />
-                <label class="form-check-label w-100" for="mobility">${data.files.mobilityFile.fileName}</label>
-              </div>
-            ` : '<p class="text-muted">No mobility file available.</p>'}
-          </div>
-        `;
-        mobilityMatrixSelect.innerHTML = '<option value="" selected disabled>Choose a mobility file...</option>';
+        // Helper function to clean file names
+        const cleanFileName = (fileName) => {
+          return fileName.replace(/\.csv$/i, '').replace(/_/g, ' ').split(' ').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          ).join(' ');
+        };
+
+        // Professional color scheme for routes
+        const routeColors = [
+          '#E74C3C', '#3498DB', '#2ECC71', '#9B59B6', '#F39C12', 
+          '#1ABC9C', '#E67E22', '#34495E', '#8E44AD', '#27AE60',
+          '#D35400', '#2980B9', '#C0392B', '#16A085', '#F1C40F'
+        ];
+
+        // Update transport routes
+        if (data.files.transportFiles && data.files.transportFiles.length > 0) {
+          transportRoutesContainer.innerHTML = data.files.transportFiles.map((file, index) => `
+            <div class="form-check mb-2">
+              <input 
+                class="form-check-input route-checkbox" 
+                type="checkbox" 
+                id="route${index}" 
+                data-file="${file.fileName}" 
+                data-color="${routeColors[index % routeColors.length]}" 
+                onchange="toggleRoute(this); updateCheckAllButton();" 
+              />
+              <label class="form-check-label fw-medium" for="route${index}">
+                <span class="route-color-indicator d-inline-block me-2" 
+                      style="width: 12px; height: 12px; background-color: ${routeColors[index % routeColors.length]}; border-radius: 2px;"></span>
+                ${cleanFileName(file.fileName)}
+              </label>
+            </div>
+          `).join('');
+          
+          // Show Check All button
+          const checkAllBtn = document.getElementById('checkAllRoutesBtn');
+          if (checkAllBtn) {
+            checkAllBtn.style.display = 'block';
+          }
+        } else {
+          transportRoutesContainer.innerHTML = `
+            <div class="text-muted text-center py-3">
+              <i class="bi bi-exclamation-circle"></i> No transport routes available
+            </div>
+          `;
+          
+          // Hide Check All button
+          const checkAllBtn = document.getElementById('checkAllRoutesBtn');
+          if (checkAllBtn) {
+            checkAllBtn.style.display = 'none';
+          }
+        }
+
+        // Update mobility nodes
+        if (data.files.mobilityFile) {
+          mobilityNodesContainer.innerHTML = `
+            <div class="form-check mb-2">
+              <input 
+                class="form-check-input mobility-checkbox" 
+                type="checkbox" 
+                id="mobility" 
+                data-file="${data.files.mobilityFile.fileName}" 
+                onchange="toggleMobility(this)" 
+              />
+              <label class="form-check-label fw-medium" for="mobility">
+                <i class="bi bi-geo-alt-fill text-success me-2"></i>
+                ${cleanFileName(data.files.mobilityFile.fileName)}
+              </label>
+            </div>
+            <div class="small text-muted mt-2">
+              <i class="bi bi-info-circle"></i> Click areas to analyze connections
+            </div>
+          `;
+        } else {
+          mobilityNodesContainer.innerHTML = `
+            <div class="text-muted text-center py-3">
+              <i class="bi bi-exclamation-circle"></i> No mobility areas available
+            </div>
+          `;
+        }
+
+        // Update mobility matrix select
+        mobilityMatrixSelect.innerHTML = '<option value="" selected disabled>Choose matrix file...</option>';
         if (data.files.mobilityMatrixFiles && data.files.mobilityMatrixFiles.length > 0) {
           data.files.mobilityMatrixFiles.forEach(file => {
             const option = document.createElement('option');
             option.value = file.fileName;
-            option.textContent = file.fileName;
+            option.textContent = cleanFileName(file.fileName);
             mobilityMatrixSelect.appendChild(option);
           });
         }
@@ -755,3 +834,61 @@ function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return R * c; // Distance in kilometers
 }
+
+// Toggle functions removed - using standard Bootstrap layout
+
+// Handle window resize to properly resize map
+window.addEventListener('resize', () => {
+  if (map) {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+  }
+});
+
+// Toggle all routes function
+function toggleAllRoutes() {
+  const routeCheckboxes = document.querySelectorAll('.route-checkbox');
+  const checkAllBtn = document.getElementById('checkAllRoutesBtn');
+  const btnIcon = checkAllBtn.querySelector('i');
+  
+  allRoutesChecked = !allRoutesChecked;
+  
+  routeCheckboxes.forEach(checkbox => {
+    if (checkbox.checked !== allRoutesChecked) {
+      checkbox.checked = allRoutesChecked;
+      toggleRoute(checkbox);
+    }
+  });
+  
+  // Update button appearance
+  if (allRoutesChecked) {
+    btnIcon.className = 'bi bi-check-square';
+    checkAllBtn.title = 'Uncheck all routes';
+  } else {
+    btnIcon.className = 'bi bi-check-all';
+    checkAllBtn.title = 'Check all routes';
+  }
+}
+
+// Update Check All button state
+function updateCheckAllButton() {
+  const routeCheckboxes = document.querySelectorAll('.route-checkbox');
+  const checkedCount = Array.from(routeCheckboxes).filter(cb => cb.checked).length;
+  const totalCount = routeCheckboxes.length;
+  const checkAllBtn = document.getElementById('checkAllRoutesBtn');
+  const btnIcon = checkAllBtn ? checkAllBtn.querySelector('i') : null;
+  
+  if (btnIcon) {
+    if (checkedCount === totalCount && totalCount > 0) {
+      allRoutesChecked = true;
+      btnIcon.className = 'bi bi-check-square';
+      checkAllBtn.title = 'Uncheck all routes';
+    } else {
+      allRoutesChecked = false;
+      btnIcon.className = 'bi bi-check-all';
+      checkAllBtn.title = 'Check all routes';
+    }
+  }
+}
+

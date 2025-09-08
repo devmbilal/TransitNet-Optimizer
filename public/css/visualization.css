@@ -1,118 +1,276 @@
+/* General body styles */
 body {
-    background-color: #f8f9fa;
-    font-family: 'Arial', sans-serif;
+    background-color: #f5f6fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
-.files-heading {
-    background-color: #436281;
+/* Visualization Navbar */
+.bg-primary {
+    background-color: #007bff !important;
 }
 
-.select-region {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
 }
 
-.horizontal-pane {
-    background-color: #858688;
-    padding: 15px;
-    border: 1px solid #b1b3b6;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    border-radius: 10px;
-}
-
-.horizontal-pane .row {
-    height: 100%; /* Ensure row takes full height of container */
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.horizontal-pane .card {
-    height: 100%; /* Ensure each card takes full height of its column */
-    display: flex;
-    flex-direction: column;
-}
-
-.horizontal-pane .card-body {
-    flex-grow: 1; /* Allow card-body to grow and fill available space */
-    overflow: auto; /* Retain scroll for overflow content */
-}
-
-.map-container {
-    /* height: calc(100vh - 300px); Adjusted height to account for three sections + margins */
-
-    margin-bottom: 20px;
-}
-
+/* Map Styles */
 #map {
-    height: 90vh; /* Increase height to 80% of viewport */
-    width: 100%; /* Ensure full width */
-}
-
-.map-placeholder {
     height: 100%;
     width: 100%;
-    background-color: #e9ecef;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
 }
 
-.map-overlay {
-    text-align: center;
+/* Right Sidebar */
+.border {
+    border: 1px solid #dee2e6 !important;
 }
 
-.route-preview {
-    margin: 5px 0;
-    font-weight: bold;
-    animation: fadeIn 0.5s ease-in;
+.rounded {
+    border-radius: 0.375rem !important;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
+/* Card Styles */
 .card {
-    border: none;
-    border-radius: 10px;
-    transition: transform 0.2s;
+    border: none !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
 }
 
 .card-header {
-    border-radius: 10px 10px 0 0;
+    border-radius: 12px 12px 0 0 !important;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+/* Form Controls */
+.form-check {
+    padding-left: 1.5rem;
+}
+
+.form-check-input {
+    margin-top: 0.125rem;
+    border-radius: 4px;
+    border: 2px solid #dee2e6;
+    transition: all 0.2s ease;
 }
 
 .form-check-input:checked {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+    border-color: #28a745;
 }
 
 .form-check-label {
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
+    line-height: 1.4;
+    font-size: 0.9rem;
 }
 
 .form-check-label:hover {
-    color: #007bff;
+    color: #495057;
 }
 
+/* Route Color Indicators */
+.route-color-indicator {
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Range Slider */
+.form-range {
+    height: 6px;
+}
+
+.form-range::-webkit-slider-thumb {
+    background-color: #17a2b8;
+    border-radius: 50%;
+    border: none;
+    height: 18px;
+    width: 18px;
+}
+
+.form-range::-moz-range-thumb {
+    background-color: #17a2b8;
+    border-radius: 50%;
+    border: none;
+    height: 18px;
+    width: 18px;
+}
+
+/* Loading States */
+.spinner-border-sm {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Color Scheme Variables */
+:root {
+    --primary-color: #007bff;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --secondary-color: #6c757d;
+    --dark-color: #343a40;
+}
+
+/* Status Indicators */
+.text-success { color: var(--success-color) !important; }
+.text-info { color: var(--info-color) !important; }
+.text-warning { color: var(--warning-color) !important; }
+.text-primary { color: var(--primary-color) !important; }
+
+/* Background Colors */
+.bg-primary { background-color: var(--primary-color) !important; }
+.bg-success { background-color: var(--success-color) !important; }
+.bg-info { background-color: var(--info-color) !important; }
+.bg-warning { background-color: var(--warning-color) !important; }
+.bg-secondary { background-color: var(--secondary-color) !important; }
+
+/* Scrollbar Styles */
+.overflow-auto::-webkit-scrollbar,
+[style*="overflow-y: auto"]::-webkit-scrollbar {
+    width: 8px;
+}
+
+.overflow-auto::-webkit-scrollbar-track,
+[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb,
+[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+    background: #dee2e6;
+    border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover,
+[style*="overflow-y: auto"]::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+/* Specific scrollbar for transport routes */
+#transportRoutesContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+#transportRoutesContainer::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+#transportRoutesContainer::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 3px;
+}
+
+#transportRoutesContainer::-webkit-scrollbar-thumb:hover {
+    background: #0056b3;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .horizontal-pane .row {
-        flex-direction: column;
+    .col-md-8 {
+        order: 2;
     }
-    .horizontal-pane .col-md-4 {
-        width: 100%; /* Full width on small screens */
-        margin-bottom: 15px; /* Space between stacked cards */
+    .col-md-4 {
+        order: 1;
+        max-height: 40vh;
     }
-    .map-container {
-        height: calc(100vh - 450px); /* Adjusted for stacked layout with three sections */
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    #regionSelect {
+        min-width: 150px !important;
     }
 }
 
-.col-md-4{
-    padding: 0.5rem;
+@media (max-width: 576px) {
+    .p-3 {
+        padding: 1rem !important;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Transition Classes */
+.transition-all {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Sidebar Toggle Button */
+#sidebarToggle {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#sidebarToggle:hover {
+    background-color: #f8f9fa;
+    border-color: #6c757d;
+    transform: translateY(-1px);
+}
+
+/* Custom Utilities */
+.shadow-hover:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
