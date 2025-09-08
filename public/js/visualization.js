@@ -489,42 +489,52 @@ function calculateMetrics(nodes) {
   const lat2 = node2Data.lat;
   const lon2 = node2Data.lng;
 
-  const R = 6371; // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const directDist = R * c;
+  // Calculate direct distance instantly using Haversine formula
+  const directDist = calculateHaversineDistance(lat1, lon1, lat2, lon2);
 
+  // Get mobility percentage instantly from cached matrix
   let mobilityPercentage = 'N/A';
   if (mobilityMatrix) {
-    console.log('Checking mobilityMatrix for:', { node1, node2, mobilityMatrix }); // Debug log
+    console.log('Checking mobilityMatrix for:', { node1, node2, mobilityMatrix });
     if (mobilityMatrix[node1] && mobilityMatrix[node1][node2] !== undefined) {
-      console.log(mobilityMatrix[node1][node2]);
-      mobilityPercentage = parseFloat(mobilityMatrix[node1][node2]) * 100; // Convert to percentage
+      mobilityPercentage = parseFloat(mobilityMatrix[node1][node2]) * 100;
     } else if (mobilityMatrix[node2] && mobilityMatrix[node2][node1] !== undefined) {
-      mobilityPercentage = parseFloat(mobilityMatrix[node2][node1]) * 100; // Convert to percentage
+      mobilityPercentage = parseFloat(mobilityMatrix[node2][node1]) * 100;
     } else {
       console.warn('No mobility data found for:', { node1, node2 });
     }
   }
 
-  // Try to get road distance from enriched mobility data first
+  // Show instant results first with direct distance and mobility percentage
+  updateDistanceInfo(nodes, mobilityPercentage, 'Loading...', directDist.toFixed(2));
+  
+  // Then try to get road distance asynchronously for enhanced data
   getRoadDistanceFromEnrichedData(node1, node2).then(roadDistance => {
     if (roadDistance !== null && roadDistance !== 'N/A') {
       console.log('Using road distance from enriched mobility data:', roadDistance, 'km');
       updateDistanceInfo(nodes, mobilityPercentage, roadDistance, directDist.toFixed(2));
     } else {
       console.log('No road distance in enriched data, falling back to API');
-      // Fallback to API if not found in enriched data
+      // Quick fallback to API if not found in enriched data
       getGoogleDistance(lat1, lon1, lat2, lon2).then(googleDist => {
         updateDistanceInfo(nodes, mobilityPercentage, googleDist, directDist.toFixed(2));
+      }).catch(error => {
+        console.warn('API fallback failed:', error);
+        updateDistanceInfo(nodes, mobilityPercentage, 'N/A', directDist.toFixed(2));
       });
     }
+  }).catch(error => {
+    console.warn('Enriched data fetch failed:', error);
+    // If enriched data fails, try API directly
+    getGoogleDistance(lat1, lon1, lat2, lon2).then(googleDist => {
+      updateDistanceInfo(nodes, mobilityPercentage, googleDist, directDist.toFixed(2));
+    }).catch(apiError => {
+      console.warn('Both enriched data and API failed:', apiError);
+      updateDistanceInfo(nodes, mobilityPercentage, 'N/A', directDist.toFixed(2));
+    });
   });
 }
+
 
 // New function to get road distance from enriched mobility data
 async function getRoadDistanceFromEnrichedData(origin, destination) {
@@ -574,10 +584,21 @@ function updateDistanceInfo(nodes = [], mobilityPercentage = 'N/A', googleDist =
   const googleDistanceSpan = document.getElementById('googleDistance');
   const directDistanceSpan = document.getElementById('directDistance');
 
-  selectedNodesSpan.textContent = nodes.length > 0 ? nodes.join(' and ') : 'None';
-  mobilityPercentageSpan.textContent = mobilityPercentage !== 'N/A' ? `${mobilityPercentage}%` : 'N/A';
-  googleDistanceSpan.textContent = googleDist !== 'N/A' ? `${googleDist.toFixed(2)} km` : 'N/A';
-  directDistanceSpan.textContent = directDist !== 'N/A' ? `${directDist} km` : 'N/A';
+  if (selectedNodesSpan) selectedNodesSpan.textContent = nodes.length > 0 ? nodes.join(' and ') : 'None';
+  if (mobilityPercentageSpan) mobilityPercentageSpan.textContent = mobilityPercentage !== 'N/A' ? `${mobilityPercentage.toFixed(2)}%` : 'N/A';
+  
+  // Handle different states for travel distance
+  if (googleDistanceSpan) {
+    if (googleDist === 'Loading...') {
+      googleDistanceSpan.innerHTML = '<i class="bi bi-hourglass-split text-info"></i> Loading...';
+    } else if (googleDist !== 'N/A' && typeof googleDist === 'number') {
+      googleDistanceSpan.textContent = `${googleDist.toFixed(2)} km`;
+    } else {
+      googleDistanceSpan.textContent = 'N/A';
+    }
+  }
+  
+  if (directDistanceSpan) directDistanceSpan.textContent = directDist !== 'N/A' ? `${directDist} km` : 'N/A';
 }
 
 async function getRoutePath(stops) {
