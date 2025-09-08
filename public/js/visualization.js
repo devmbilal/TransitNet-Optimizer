@@ -369,8 +369,10 @@ function toggleRoute(checkbox) {
             updatePTEncoding();
           }
           
-          // Update button state
-          updateAreaEncodingButton();
+          // Update button state after route data is fully set
+          setTimeout(() => {
+            updateAreaEncodingButton();
+          }, 10);
         } else {
           console.error(data.message);
         }
@@ -389,8 +391,10 @@ function toggleRoute(checkbox) {
       updatePTEncoding();
     }
     
-    // Update button state
-    updateAreaEncodingButton();
+    // Update button state after route removal is complete
+    setTimeout(() => {
+      updateAreaEncodingButton();
+    }, 10);
   }
 }
 
@@ -429,11 +433,15 @@ function toggleMobility(checkbox) {
 
           if (mobilityNodesData.length > 0) {
             mobilityLayer.addTo(map);
-            map.fitBounds(mobilityLayer.getBounds());
+            // Create bounds from node coordinates
+            const bounds = L.latLngBounds(mobilityNodesData.map(node => [node.lat, node.lng]));
+            map.fitBounds(bounds);
           }
           
-          // Update button state
-          updateAreaEncodingButton();
+          // Update button state after data is fully set
+          setTimeout(() => {
+            updateAreaEncodingButton();
+          }, 10);
         }
       });
   } else {
@@ -649,8 +657,14 @@ function getRegionCenter(region) {
 function updateAreaEncodingButton() {
   const button = document.getElementById('areaEncodingBtn');
   const status = document.getElementById('encodingStatus');
-  const hasMobilityNodes = mobilityNodesData && mobilityNodesData.length > 0;
-  const hasRoutes = loadedRoutes && loadedRoutes.size > 0;
+  
+  if (!button || !status) {
+    console.error('Area encoding button or status element not found');
+    return;
+  }
+  
+  const hasMobilityNodes = Array.isArray(mobilityNodesData) && mobilityNodesData.length > 0;
+  const hasRoutes = loadedRoutes instanceof Map && loadedRoutes.size > 0;
   
   if (hasMobilityNodes && hasRoutes) {
     button.disabled = false;
