@@ -532,65 +532,218 @@ class OptimizationManager {
     }
 
     createCharts(results) {
-        this.createNetworkComparisonChart(results);
+        this.createSeparateNetworkCharts(results);
         this.createImprovementChart(results);
     }
 
-    createNetworkComparisonChart(results) {
-        const ctx = document.getElementById('networkComparisonChart').getContext('2d');
+    createSeparateNetworkCharts(results) {
+        // Debug logging
+        console.log('📊 Network Metrics Debug Info:', {
+            'Original Network': {
+                distance: results.originalNetwork.totalDistance + ' km',
+                mobility: results.originalNetwork.totalMobility,
+                efficiency: (results.originalNetwork.networkEfficiency * 100).toFixed(4) + '%'
+            },
+            'Optimized Network': {
+                distance: results.optimizedNetwork.totalDistance + ' km', 
+                mobility: results.optimizedNetwork.totalMobility,
+                efficiency: (results.optimizedNetwork.networkEfficiency * 100).toFixed(4) + '%'
+            }
+        });
         
-        if (this.charts.networkComparison) {
-            this.charts.networkComparison.destroy();
+        // Create individual charts for better visibility
+        this.createDistanceChart(results);
+        this.createMobilityChart(results);
+        this.createEfficiencyChart(results);
+    }
+
+    createDistanceChart(results) {
+        const ctx = document.getElementById('distanceChart').getContext('2d');
+        
+        if (this.charts.distance) {
+            this.charts.distance.destroy();
         }
 
-        this.charts.networkComparison = new Chart(ctx, {
+        this.charts.distance = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Total Distance', 'Total Mobility', 'Network Efficiency'],
-                datasets: [
-                    {
-                        label: 'Original Network',
-                        data: [
-                            results.originalNetwork.totalDistance,
-                            results.originalNetwork.totalMobility,
-                            results.originalNetwork.networkEfficiency * 100
-                        ],
-                        backgroundColor: 'rgba(100, 116, 139, 0.8)',
-                        borderColor: 'rgba(100, 116, 139, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Optimized Network',
-                        data: [
-                            results.optimizedNetwork.totalDistance,
-                            results.optimizedNetwork.totalMobility,
-                            results.optimizedNetwork.networkEfficiency * 100
-                        ],
-                        backgroundColor: 'rgba(37, 99, 235, 0.8)',
-                        borderColor: 'rgba(37, 99, 235, 1)',
-                        borderWidth: 1
-                    }
-                ]
+                labels: ['Original', 'Optimized'],
+                datasets: [{
+                    label: 'Total Distance (km)',
+                    data: [
+                        results.originalNetwork.totalDistance,
+                        results.optimizedNetwork.totalDistance
+                    ],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(16, 185, 129, 1)'
+                    ],
+                    borderWidth: 2
+                }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Network Comparison'
+                        text: 'Total Distance Comparison'
                     },
                     legend: {
-                        display: true
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(1) + ' km';
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(1) + ' km';
+                            }
+                        }
                     }
                 }
             }
         });
     }
+
+    createMobilityChart(results) {
+        const ctx = document.getElementById('mobilityChart').getContext('2d');
+        
+        if (this.charts.mobility) {
+            this.charts.mobility.destroy();
+        }
+
+        this.charts.mobility = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Original', 'Optimized'],
+                datasets: [{
+                    label: 'Total Mobility',
+                    data: [
+                        results.originalNetwork.totalMobility,
+                        results.optimizedNetwork.totalMobility
+                    ],
+                    backgroundColor: [
+                        'rgba(100, 116, 139, 0.8)',
+                        'rgba(37, 99, 235, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(100, 116, 139, 1)',
+                        'rgba(37, 99, 235, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total Mobility Comparison'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(1);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    createEfficiencyChart(results) {
+        const ctx = document.getElementById('efficiencyChart').getContext('2d');
+        
+        if (this.charts.efficiency) {
+            this.charts.efficiency.destroy();
+        }
+
+        this.charts.efficiency = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Original', 'Optimized'],
+                datasets: [{
+                    label: 'Network Efficiency (%)',
+                    data: [
+                        results.originalNetwork.networkEfficiency * 100,
+                        results.optimizedNetwork.networkEfficiency * 100
+                    ],
+                    backgroundColor: [
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(16, 185, 129, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Network Efficiency Comparison'
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(4) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                if (value < 0.1) {
+                                    return value.toFixed(4) + '%';
+                                } else {
+                                    return value.toFixed(2) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
 
     createImprovementChart(results) {
         const ctx = document.getElementById('improvementChart').getContext('2d');
@@ -602,7 +755,7 @@ class OptimizationManager {
         this.charts.improvement = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Distance Reduction', 'Mobility Increase', 'Efficiency Gain'],
+                labels: ['Distance Reduction (%)', 'Mobility Increase (%)', 'Efficiency Gain (%)'],
                 datasets: [{
                     data: [
                         Math.abs(results.improvements.distanceReduction),
@@ -632,6 +785,15 @@ class OptimizationManager {
                     legend: {
                         display: true,
                         position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                return label + ': ' + value.toFixed(2) + '%';
+                            }
+                        }
                     }
                 }
             }

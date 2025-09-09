@@ -3,22 +3,27 @@
         <div class="optimization-header">
             <div class="container-fluid">
                 <div class="row align-items-center">
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-xl-9">
                         <h1 class="page-title">
-                            <i class="fas fa-route text-primary me-2"></i>
+                            <i class="fas fa-route"></i>
                             Route Optimization
                         </h1>
                         <p class="page-subtitle">
-                            Optimize transit routes using advanced algorithms and mobility data analysis
+                            Optimize transit routes using advanced algorithms and mobility data analysis to maximize network efficiency and coverage
                         </p>
                     </div>
-                    <div class="col-md-4 text-end">
-                        <button class="btn btn-outline-primary me-2" id="helpBtn">
-                            <i class="fas fa-question-circle"></i> Help
-                        </button>
-                        <button class="btn btn-primary" id="newOptimizationBtn">
-                            <i class="fas fa-plus"></i> New Optimization
-                        </button>
+                    <div class="col-lg-4 col-xl-3">
+                        <div class="d-flex flex-column flex-lg-row gap-2 justify-content-lg-end">
+                            <button class="btn btn-outline-primary" id="helpBtn">
+                                <i class="fas fa-question-circle me-1"></i>
+                                <span class="d-none d-lg-inline">Help</span>
+                            </button>
+                            <button class="btn btn-primary" id="newOptimizationBtn">
+                                <i class="fas fa-plus me-1"></i>
+                                <span class="d-none d-sm-inline">New Optimization</span>
+                                <span class="d-inline d-sm-none">New</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -158,7 +163,7 @@
                                                 <div class="session-item" data-session-id="<%= session.sessionId %>">
                                                     <div class="session-info">
                                                         <div class="session-region"><%= session.region %></div>
-                                                        <div class="session-date"><%= new Date(session.createdAt).toLocaleDateString() %></div>
+                                                        <div class="session-date"><%= new Date(session.createdAt).toLocaleDateString() %> <%= new Date(session.createdAt).toLocaleTimeString() %></div>
                                                     </div>
                                                     <div class="session-status">
                                                         <span class="badge badge-<%= session.status %>"><%= session.status %></span>
@@ -380,9 +385,9 @@
                                 <!-- Results Summary Card -->
                                 <div class="col-12 mb-4">
                                     <div class="card">
-                                        <div class="card-header">
+                                <div class="card-header bg-success text-white">
                                             <h5 class="mb-0">
-                                                <i class="fas fa-chart-line me-2 text-success"></i>
+                                                <i class="fas fa-chart-line me-2"></i>
                                                 Optimization Results Summary
                                             </h5>
                                         </div>
@@ -424,7 +429,7 @@
                                 <!-- Recommendations and Visualization -->
                                 <div class="col-md-6">
                                     <div class="card">
-                                        <div class="card-header">
+                                        <div class="card-header bg-primary text-white">
                                             <h6 class="mb-0">
                                                 <i class="fas fa-list-ol me-2"></i>
                                                 Route Recommendations
@@ -440,7 +445,7 @@
 
                                 <div class="col-md-6">
                                     <div class="card">
-                                        <div class="card-header">
+                                        <div class="card-header bg-warning text-dark">
                                             <h6 class="mb-0">
                                                 <i class="fas fa-map me-2"></i>
                                                 Route Visualization
@@ -455,7 +460,7 @@
                                 <!-- Detailed Analysis -->
                                 <div class="col-12 mt-4">
                                     <div class="card">
-                                        <div class="card-header">
+                                        <div class="card-header bg-secondary text-white">
                                             <div class="row align-items-center">
                                                 <div class="col">
                                                     <h6 class="mb-0">
@@ -475,10 +480,18 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    <canvas id="networkComparisonChart" width="400" height="200"></canvas>
+                                                <div class="col-md-4">
+                                                    <canvas id="distanceChart" width="300" height="200"></canvas>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
+                                                    <canvas id="mobilityChart" width="300" height="200"></canvas>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <canvas id="efficiencyChart" width="300" height="200"></canvas>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
                                                     <canvas id="improvementChart" width="400" height="200"></canvas>
                                                 </div>
                                             </div>

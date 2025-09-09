@@ -86,7 +86,7 @@ exports.getRegionDataSummary = async (req, res) => {
         totalRecords: mobilityMatrixFiles.reduce((sum, file) => sum + file.data.length, 0),
         files: mobilityMatrixFiles.map(f => ({
           _id: f._id,
-          fileName: f.fileName,
+          fileName: f.fileName.replace(/\.csv$/i, ''),
           recordCount: f.data.length,
           createdAt: f.createdAt
         }))
