@@ -32,6 +32,10 @@
     <link rel="stylesheet" href="/css/upload.css" />
     <link rel="stylesheet" href="/css/visualization.css" />
     <link rel="stylesheet" href="/css/routeCreation.css" />
+    <% if (typeof locals !== 'undefined' && locals.pageName === 'Route Optimization') { %>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="/css/optimization.css" />
+    <% } %>
   </head>
   <body>
     <%- include('../partials/header.ejs') %>
@@ -59,5 +63,9 @@
     <script src="/js/visualization.js"></script>
     <!-- Route Creation JS - will check for appropriate containers before running -->
     <script src="/js/routeCreation.js"></script>
+    <% if (typeof locals !== 'undefined' && locals.pageName === 'Route Optimization') { %>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="/js/optimization.js"></script>
+    <% } %>
   </body>
 </html>

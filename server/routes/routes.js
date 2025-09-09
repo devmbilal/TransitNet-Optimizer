@@ -7,6 +7,7 @@ const transportController = require("../controllers/transport/transportControlle
 const visualizationController = require("../controllers/visualization/visualizationController");
 const distanceController = require("../controllers/distance/distanceController");
 const routeController = require("../controllers/route/routeController");
+const optimizationRoutes = require("./optimization");
 
 const router = express.Router();
 
@@ -50,5 +51,8 @@ router.get('/route-creation/export/:id', isAuthenticated, routeController.export
 //Distance API
 router.get('/api/distance', isAuthenticated, distanceController.getCachedDistance);
 router.get('/api/mobility/distance', isAuthenticated, distanceController.getCachedDistance);
+
+//Route Optimization
+router.use('/optimization', optimizationRoutes);
 
 module.exports = router;
