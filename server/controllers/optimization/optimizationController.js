@@ -374,14 +374,41 @@ exports.getVisualizationData = async (req, res) => {
       .slice(0, 50) // Limit for performance
       .map(route => {
         // Get coordinates for each area in the path
-        const pathCoordinates = route.path.map(areaName => {
-          const node = mobilityNodes.find(n => n.name === areaName);
-          return node ? {
-            name: areaName,
-            latitude: node.latitude,
-            longitude: node.longitude
-          } : null;
-        }).filter(coord => coord !== null);
+        let pathCoordinates = [];
+        
+        if (route.path && route.path.length > 0) {
+          // Use the full path from Dijkstra algorithm
+          pathCoordinates = route.path.map(areaName => {
+            const node = mobilityNodes.find(n => n.name === areaName);
+            return node ? {
+              name: areaName,
+              latitude: node.latitude,
+              longitude: node.longitude
+            } : null;
+          }).filter(coord => coord !== null);
+        }
+        
+        // Fallback: if path is empty or has missing coordinates, create direct route
+        if (pathCoordinates.length < 2) {
+          console.log(`Creating direct route fallback for ${route.fromArea} → ${route.toArea}`);
+          const fromNode = mobilityNodes.find(n => n.name === route.fromArea);
+          const toNode = mobilityNodes.find(n => n.name === route.toArea);
+          
+          if (fromNode && toNode) {
+            pathCoordinates = [
+              {
+                name: route.fromArea,
+                latitude: fromNode.latitude,
+                longitude: fromNode.longitude
+              },
+              {
+                name: route.toArea,
+                latitude: toNode.latitude,
+                longitude: toNode.longitude
+              }
+            ];
+          }
+        }
 
         return {
           fromArea: route.fromArea,
@@ -390,6 +417,7 @@ exports.getVisualizationData = async (req, res) => {
           mobility: route.mobility,
           weight: route.weight,
           path: pathCoordinates,
+          fullPath: route.path, // Include original path for debugging
           efficiency: route.mobility / route.distance
         };
       });
@@ -413,15 +441,30 @@ exports.getVisualizationData = async (req, res) => {
   }
 };
 
+// Get available regions
+exports.getRegions = async (req, res) => {
+  try {
+    const regions = await TransportFile.distinct('region');
+    res.json({ success: true, regions });
+  } catch (error) {
+    console.error('Error getting regions:', error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 // Get user's optimization sessions
 exports.getUserSessions = async (req, res) => {
   try {
-    const { limit = 10, status = 'all' } = req.query;
+    const { limit = 10, status = 'all', region } = req.query;
     
     let query = { userId: req.session.user?.userID };
     
     if (status !== 'all') {
       query.status = status;
+    }
+    
+    if (region) {
+      query.region = region;
     }
 
     const sessions = await OptimizationSession.find(query)
@@ -429,7 +472,30 @@ exports.getUserSessions = async (req, res) => {
       .limit(parseInt(limit))
       .select('sessionId region status progress currentPhase createdAt completedAt errorMessage');
 
-    res.json({ success: true, sessions });
+    // For service planning, we need to include the results data for completed sessions
+    const populatedSessions = await Promise.all(
+      sessions.map(async (session) => {
+        const sessionObj = session.toObject();
+        if (sessionObj.status === 'completed') {
+          try {
+            const fullSession = await OptimizationSession.findOne({ 
+              sessionId: sessionObj.sessionId,
+              userId: req.session.user?.userID 
+            });
+            if (fullSession && fullSession.results) {
+              sessionObj.results = {
+                improvements: fullSession.results.improvements
+              };
+            }
+          } catch (error) {
+            console.error('Error fetching session results:', error);
+          }
+        }
+        return sessionObj;
+      })
+    );
+
+    res.json({ success: true, sessions: populatedSessions });
   } catch (error) {
     console.error('Error getting user sessions:', error);
     res.json({ success: false, message: error.message });

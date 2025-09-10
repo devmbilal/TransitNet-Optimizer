@@ -10,6 +10,7 @@ router.use(isAuthenticated);
 router.get('/', optimizationController.getOptimizationPage);
 
 // Data summary endpoint
+router.get('/api/regions', optimizationController.getRegions);
 router.get('/api/region-summary', optimizationController.getRegionDataSummary);
 
 // Optimization process endpoints

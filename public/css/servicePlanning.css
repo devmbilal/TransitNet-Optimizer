@@ -1,0 +1,318 @@
+/**
+ * Service Planning CSS - Isolated to avoid conflicts with main navigation
+ * Scoped to .service-planning-container to prevent global style conflicts
+ */
+
+/* Container scoping to prevent conflicts */
+.service-planning-container {
+    background-color: #f8fafc;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* Header styling - isolated */
+.service-planning-container .planning-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    position: relative;
+}
+
+.service-planning-container .planning-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        #2563eb 0%, #3b82f6 25%, #06b6d4 50%, 
+        #10b981 75%, #f59e0b 100%);
+    border-radius: 16px 16px 0 0;
+}
+
+.service-planning-container .planning-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+}
+
+.service-planning-container .planning-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Bootstrap layout is used instead of custom grid */
+
+.service-planning-container .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #374151;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.service-planning-container .form-select,
+.service-planning-container .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.service-planning-container .form-select:focus,
+.service-planning-container .form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.service-planning-container .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.service-planning-container .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+}
+
+.service-planning-container .btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25);
+}
+
+.service-planning-container .btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.service-planning-container .btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25);
+}
+
+/* Panel styling for Bootstrap cards */
+.service-planning-container .panel-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.service-planning-container .panel-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0 0.5rem;
+}
+
+.service-planning-container .panel-icon {
+    width: 24px;
+    height: 24px;
+    color: #3b82f6;
+}
+
+/* Metrics cards */
+.service-planning-container .metric-card {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.service-planning-container .metric-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.service-planning-container .metric-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.service-planning-container .metric-change {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.service-planning-container .metric-change.positive {
+    color: #059669;
+}
+
+.service-planning-container .metric-change.negative {
+    color: #dc2626;
+}
+
+.service-planning-container .metric-change.neutral {
+    color: #64748b;
+}
+
+/* Route list */
+.service-planning-container .route-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-planning-container .route-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.service-planning-container .route-item:hover {
+    background: #f1f5f9;
+    border-color: #3b82f6;
+    transform: translateX(4px);
+}
+
+.service-planning-container .route-item.selected {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.service-planning-container .route-name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.service-planning-container .route-details {
+    font-size: 0.875rem;
+    color: #64748b;
+    display: flex;
+    gap: 1rem;
+}
+
+/* Loading states */
+.service-planning-container .loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: #64748b;
+}
+
+.service-planning-container .spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid #e2e8f0;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Export section */
+.service-planning-container .export-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #f1f5f9;
+}
+
+.service-planning-container .export-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.service-planning-container .btn-export {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.service-planning-container .btn-export:hover {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(5, 150, 105, 0.25);
+}
+
+/* Alert messages */
+.service-planning-container .alert {
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+}
+
+.service-planning-container .alert-info {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1e40af;
+}
+
+.service-planning-container .alert-success {
+    background: #ecfdf5;
+    border-color: #10b981;
+    color: #047857;
+}
+
+.service-planning-container .alert-warning {
+    background: #fffbeb;
+    border-color: #f59e0b;
+    color: #92400e;
+}
+
+.service-planning-container .alert-error {
+    background: #fef2f2;
+    border-color: #ef4444;
+    color: #dc2626;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .service-planning-container {
+        padding: 0.5rem;
+    }
+    
+    .service-planning-container .planning-header {
+        padding: 1rem;
+    }
+    
+    .service-planning-container .planning-title {
+        font-size: 1.5rem;
+    }
+}

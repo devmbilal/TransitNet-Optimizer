@@ -8,6 +8,7 @@ const visualizationController = require("../controllers/visualization/visualizat
 const distanceController = require("../controllers/distance/distanceController");
 const routeController = require("../controllers/route/routeController");
 const optimizationRoutes = require("./optimization");
+const servicePlanningRoutes = require("./servicePlanning");
 
 const router = express.Router();
 
@@ -54,5 +55,8 @@ router.get('/api/mobility/distance', isAuthenticated, distanceController.getCach
 
 //Route Optimization
 router.use('/optimization', optimizationRoutes);
+
+//Service Planning
+router.use('/service-planning', servicePlanningRoutes);
 
 module.exports = router;

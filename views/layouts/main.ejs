@@ -36,6 +36,10 @@
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
       <link rel="stylesheet" href="/css/optimization.css" />
     <% } %>
+    <% if (typeof locals !== 'undefined' && locals.pageName === 'Service Planning') { %>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="/css/servicePlanning.css" />
+    <% } %>
   </head>
   <body>
     <%- include('../partials/header.ejs') %>
@@ -66,6 +70,9 @@
     <% if (typeof locals !== 'undefined' && locals.pageName === 'Route Optimization') { %>
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script src="/js/optimization.js"></script>
+    <% } %>
+    <% if (typeof locals !== 'undefined' && locals.pageName === 'Service Planning') { %>
+      <script src="/js/servicePlanning.js"></script>
     <% } %>
   </body>
 </html>
