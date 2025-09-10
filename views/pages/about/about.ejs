@@ -1,15 +1,178 @@
-<div
-  class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
->
-  <h1 class="h2">Public Transport Route Optimization System</h1>
-</div>
+<!-- Light Theme About Page -->
+<div class="about-container">
+    <!-- System Overview -->
+    <div class="about-card mb-4">
+        <h2 class="text-center mb-4"><i class="bi bi-info-circle me-3 text-primary"></i>About TransitNet Optimizer</h2>
+        <p class="lead text-center mb-4">
+            Advanced public transport route optimization system for intelligent urban mobility planning
+        </p>
+        
+        <div class="system-description">
+            <p>
+                TransitNet Optimizer is a comprehensive web-based platform that revolutionizes public transport planning 
+                through data-driven insights and advanced algorithmic optimization. Designed for transit authorities, 
+                urban planners, and transportation engineers, this intelligent system provides powerful tools for route analysis, 
+                network optimization, and comprehensive service planning.
+            </p>
+            <p>
+                The platform integrates cutting-edge algorithms with intuitive visualization tools to transform complex transportation 
+                data into actionable insights. By leveraging Dijkstra-based optimization techniques and interactive mapping capabilities, 
+                TransitNet Optimizer enables users to design efficient route networks that maximize coverage while minimizing operational costs 
+                and travel times for passengers.
+            </p>
+        </div>
+    </div>
 
-<div class="pt-3">
-  <p>
-    Welcome to the administrative hub of the Public Transport Route Optimization
-    System, an advanced tool designed to enhance urban mobility by leveraging
-    data-driven insights. This system empowers transit authorities with
-    intelligent route planning, ensuring efficiency, reduced travel time, and
-    improved public transport accessibility.
-  </p>
+    <!-- System Workflow -->
+    <div class="about-card mb-4">
+        <h3><i class="bi bi-arrow-right-circle me-2 text-success"></i>System Workflow & Page Guide</h3>
+        
+        <div class="workflow-steps">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h5><i class="bi bi-cloud-upload text-primary me-2"></i>Data Upload Center</h5>
+                    <p><strong>Purpose:</strong> Import and organize your transportation data files by region for comprehensive analysis.</p>
+                    <p><strong>Workflow:</strong> Start by selecting or creating a region, then upload your transport route files (CSV), mobility area coordinates, and travel pattern matrices. The system automatically validates file formats and organizes data for seamless integration with other modules. Files are versioned and can be updated incrementally as your data evolves.</p>
+                </div>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h5><i class="bi bi-eye text-info me-2"></i>Data Visualization</h5>
+                    <p><strong>Purpose:</strong> Explore and understand your transportation network through interactive maps and visual analytics.</p>
+                    <p><strong>Workflow:</strong> Select your region and data files to generate dynamic visualizations of your transport network. View existing routes overlaid on maps, examine mobility area distributions, and analyze travel patterns through heat maps and connection matrices. This visual exploration helps identify network gaps and optimization opportunities before proceeding to route creation or optimization.</p>
+                </div>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h5><i class="bi bi-plus-square text-warning me-2"></i>Route Creation (Optional)</h5>
+                    <p><strong>Purpose:</strong> Design new transportation routes manually using interactive mapping tools and drag-and-drop interfaces.</p>
+                    <p><strong>Workflow:</strong> Access the route creation interface to manually design custom routes by clicking points on the map or dragging stops into desired sequences. Define route characteristics, set scheduling parameters, and preview route efficiency metrics in real-time. Save created routes to your regional dataset for inclusion in optimization processes or direct implementation.</p>
+                </div>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h5><i class="bi bi-gear text-danger me-2"></i>Route Optimization</h5>
+                    <p><strong>Purpose:</strong> Apply advanced algorithms to automatically optimize your entire transportation network for maximum efficiency.</p>
+                    <p><strong>Workflow:</strong> Configure optimization parameters including objectives (minimize distance, maximize coverage, reduce travel time), constraints (budget limits, fleet size), and performance weights. Run Dijkstra-based optimization algorithms that analyze all possible route combinations and generate optimal network configurations. Review detailed performance metrics, comparison charts, and export comprehensive optimization reports with implementation recommendations.</p>
+                </div>
+            </div>
+            
+            <div class="step-item">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h5><i class="bi bi-bar-chart-line text-success me-2"></i>Interactive Service Planning</h5>
+                    <p><strong>Purpose:</strong> Fine-tune optimized routes through interactive modification and generate final implementation-ready service plans.</p>
+                    <p><strong>Workflow:</strong> Load optimization results and interactively modify routes on the map by adding, editing, or removing segments. Compare your modifications against baseline optimization results in real-time through side-by-side performance metrics. Export finalized route data, implementation schedules, and comprehensive service plans ready for transit authority approval and deployment.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technical Features -->
+    <div class="about-card mb-4">
+        <h3><i class="bi bi-code-square me-2 text-info"></i>Technical Features</h3>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h6><i class="bi bi-gear text-success me-2"></i>Advanced Algorithms</h6>
+                <p>Dijkstra-based route optimization with customizable parameters and multi-objective optimization capabilities</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-map text-primary me-2"></i>Interactive Mapping</h6>
+                <p>Leaflet-based visualization with drag-and-drop route creation and real-time editing capabilities</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-speedometer2 text-warning me-2"></i>Real-time Analysis</h6>
+                <p>Live performance metrics, side-by-side comparisons, and instant feedback on route modifications</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-download text-info me-2"></i>Data Export</h6>
+                <p>Comprehensive export options including CSV, JSON, and formatted reports for implementation</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-display text-success me-2"></i>Responsive Design</h6>
+                <p>Fully responsive interface optimized for desktop, tablet, and mobile devices</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-geo text-primary me-2"></i>Region Management</h6>
+                <p>Multi-region data organization with version control and collaborative workspace features</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supported Data Formats -->
+    <div class="about-card mb-4">
+        <h3><i class="bi bi-file-earmark-spreadsheet me-2 text-warning"></i>Supported Data Formats</h3>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h6><i class="bi bi-bus text-primary me-2"></i>Transport Route Files</h6>
+                <p>CSV files containing comprehensive route information including stops, schedules, route IDs, and operational parameters for existing transit networks</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-geo-alt text-success me-2"></i>Mobility Area Files</h6>
+                <p>CSV files with precise geographic coordinates, area definitions, demographic data, and connectivity information for comprehensive spatial analysis</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-grid text-info me-2"></i>Mobility Matrix Files</h6>
+                <p>CSV files representing detailed travel patterns, demand matrices, and passenger flow data between different areas and time periods</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Development Team & Acknowledgments -->
+    <div class="about-card mb-4">
+        <h3><i class="bi bi-people-fill me-2 text-primary"></i>Development Team & Acknowledgments</h3>
+        
+        <div class="team-grid">
+            <div class="team-card">
+                <h6><i class="bi bi-person-badge text-primary me-2"></i>Lead Developer</h6>
+                <p><strong>Muhammad Bilal</strong></p>
+                <p>System Architecture, Frontend & Backend Development, User Interface Design</p>
+            </div>
+            
+            <div class="team-card">
+                <h6><i class="bi bi-cpu text-success me-2"></i>Algorithm Developer</h6>
+                <p><strong>Javeria</strong></p>
+                <p>Route Optimization Algorithms, Mathematical Modeling, Performance Analysis</p>
+            </div>
+            
+            <div class="team-card">
+                <h6><i class="bi bi-award text-warning me-2"></i>Project Supervisor</h6>
+                <p><strong>Dr. Rabeeh Abbasi</strong></p>
+                <p>Academic Supervision & Research Guidance</p>
+            </div>
+            
+            <div class="team-card">
+                <h6><i class="bi bi-gear text-info me-2"></i>Technical Advisor</h6>
+                <p><strong>Irfan ul Haq Qureshi</strong></p>
+                <p>Technical Consultation & System Architecture</p>
+            </div>
+        </div>
+        
+        <div class="features-grid mt-4">
+            <div class="feature-card">
+                <h6><i class="bi bi-building text-primary me-2"></i>Academic Institution</h6>
+                <p><strong>Department of Computer Science</strong><br>Quaid-i-Azam University Islamabad</p>
+            </div>
+            <div class="feature-card">
+                <h6><i class="bi bi-currency-dollar text-success me-2"></i>Funding Project</h6>
+                <p><strong>Road Safety Project</strong><br>Project ID: GCF-744</p>
+            </div>
+        </div>
+        
+        <div class="special-thanks mt-4">
+            <h6><i class="bi bi-heart-fill text-danger me-2"></i>Special Thanks</h6>
+            <p class="mb-0">
+                We extend our gratitude to all contributors, testers, and the transportation planning community 
+                for their valuable feedback and support in developing this comprehensive optimization platform.
+            </p>
+        </div>
+    </div>
+    </div>
 </div>

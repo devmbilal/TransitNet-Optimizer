@@ -1,85 +1,95 @@
-<nav
-  id="sidebarMenu"
-  class="col-md-3 col-lg-2 d-md-block bg-light sidebar sid collapse"
->
-  <div class="position-sticky pt-3 sidebar-sticky">
-    <ul class="nav flex-column">
-      <!-- Data Upload -->
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/upload">
-          <i class="bi bi-file-earmark-arrow-up"></i>
-          Upload Data
-        </a>
-      </li>
-      <!-- Map View -->
-      <li class="nav-item">
-        <a class="nav-link" href="/visualization">
-          <i class="bi bi-geo-alt-fill"></i>
-          Layered visualization
-        </a>
-      </li>
-      <!-- Route Creation -->
-      <li class="nav-item">
-        <a class="nav-link" href="/route-creation">
-          <i class="bi bi-plus-square"></i>
-          Route Creation
-        </a>
-      </li>
-      <!-- Route Optimization -->
-      <li class="nav-item">
-        <a class="nav-link" href="/optimization">
-          <i class="bi bi-diagram-3-fill"></i>
-          Route Optimization
-        </a>
-      </li>
-      <!-- Data Manipulation -->
-      <li class="nav-item">
-        <a class="nav-link" href="/data-manipulation">
-          <i class="bi bi-funnel"></i>
-          Data Manipulation
-        </a>
-      </li>
-      <!-- Reports -->
-      <li class="nav-item">
-        <a class="nav-link" href="/reports">
-          <i class="bi bi-file-earmark-text"></i>
-          Reports
-        </a>
-      </li>
-      <!-- Admin Dashboard -->
-      <li class="nav-item">
-        <a class="nav-link" href="/admin">
-          <i class="bi bi-gear-fill"></i>
-          Admin
-        </a>
-      </li>
-      <!-- Service Planning Support -->
-      <li class="nav-item">
-        <a class="nav-link" href="/service-planning">
-          <i class="bi bi-bar-chart-line"></i>
-          Service Planning
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/about">
-          <i class="bi bi-patch-question"></i>
-          About
-        </a>
-      </li>
-      <!-- Testing Page -->
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/home">
-          <i class="bi bi-house-door"></i>
-          Testing Page
-        </a>
-      </li>
-      <!-- Logout -->
-      <li class="nav-item">
-        <a class="nav-link" href="/logout">
-          <i class="bi bi-box-arrow-right"></i>
-          Logout
-        </a>
-      </li>
-    </ul>
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse show" style="background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%); border-right: 1px solid #dee2e6;">
+  <div class="position-sticky sidebar-sticky" style="padding-top: 1rem;">
+    <!-- Quick Stats Card -->
+    <div class="card border-0 shadow-sm mx-3 mb-4" style="background: rgba(255,255,255,0.8);">
+      <div class="card-body p-3 text-center">
+        <div class="small text-muted mb-1">Current Workspace</div>
+        <div class="fw-semibold text-primary">Public Transport</div>
+        <div class="small text-success">
+          <i class="bi bi-check-circle-fill me-1"></i>System Active
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <div class="px-3">
+      <div class="small text-muted text-uppercase fw-semibold mb-2 px-2">Data Management</div>
+      <ul class="nav flex-column mb-4">
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2 px-3 rounded-3" href="/upload">
+            <div class="icon-container me-3">
+              <i class="bi bi-cloud-upload fs-5 text-primary"></i>
+            </div>
+            <div class="flex-fill">
+              <div class="nav-title">Upload Data</div>
+              <div class="nav-subtitle">Import CSV files</div>
+            </div>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2 px-3 rounded-3" href="/visualization">
+            <div class="icon-container me-3">
+              <i class="bi bi-layers fs-5 text-info"></i>
+            </div>
+            <div class="flex-fill">
+              <div class="nav-title">Visualize Data</div>
+              <div class="nav-subtitle">Interactive maps</div>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <div class="small text-muted text-uppercase fw-semibold mb-2 px-2">Route Operations</div>
+      <ul class="nav flex-column mb-4">
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2 px-3 rounded-3" href="/route-creation">
+            <div class="icon-container me-3">
+              <i class="bi bi-plus-square fs-5 text-success"></i>
+            </div>
+            <div class="flex-fill">
+              <div class="nav-title">Create Routes</div>
+              <div class="nav-subtitle">Design new paths</div>
+            </div>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2 px-3 rounded-3" href="/optimization">
+            <div class="icon-container me-3">
+              <i class="bi bi-gear fs-5 text-warning"></i>
+            </div>
+            <div class="flex-fill">
+              <div class="nav-title">Optimize Routes</div>
+              <div class="nav-subtitle">AI-powered analysis</div>
+            </div>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2 px-3 rounded-3" href="/service-planning">
+            <div class="icon-container me-3">
+              <i class="bi bi-graph-up fs-5 text-danger"></i>
+            </div>
+            <div class="flex-fill">
+              <div class="nav-title">Service Planning</div>
+              <div class="nav-subtitle">Interactive planning</div>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <div class="small text-muted text-uppercase fw-semibold mb-2 px-2">System</div>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center py-2 px-3 rounded-3" href="/about">
+            <div class="icon-container me-3">
+              <i class="bi bi-info-circle fs-5 text-secondary"></i>
+            </div>
+            <div class="flex-fill">
+              <div class="nav-title">About</div>
+              <div class="nav-subtitle">System information</div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>

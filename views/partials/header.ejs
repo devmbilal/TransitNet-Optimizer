@@ -1,23 +1,65 @@
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/upload"
-    >TransitNet Optimizer</a
-  >
+<header class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm" style="background: linear-gradient(135deg, #1a2332 0%, #2c3e50 100%);">
+  <div class="container-fluid px-3">
+    <!-- Brand Section -->
+    <a class="navbar-brand d-flex align-items-center" href="/upload">
+      <div class="brand-logo me-2 p-2 rounded-circle">
+        <i class="bi bi-bus-front fs-5"></i>
+      </div>
+      <div>
+        <div class="fw-bold" style="font-size: 1.1rem; line-height: 1;">TransitNet</div>
+        <div class="small opacity-75" style="font-size: 0.7rem; line-height: 1;">OPTIMIZER</div>
+      </div>
+    </a>
 
-  <button
-    class="navbar-toggler position-absolute d-md-none collapsed"
-    type="button"
-    data-bs-toggle="collapse"
-    data-bs-target="#sidebarMenu"
-    aria-controls="sidebarMenu"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <!-- Mobile Toggle -->
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#sidebarMenu"
+      aria-controls="sidebarMenu"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div
-    class="nav col-12 col-md-auto flex-fill mb-2 justify-content-center mb-md-0"
-  >
-    <span id="pageTitle" class="text-white fs-6"><%= locals.pageName %></span>
+    <!-- Navigation Links -->
+    <div class="d-none d-lg-flex flex-grow-1 justify-content-center">
+      <nav class="nav nav-pills">
+        <a class="nav-link text-white-50 px-3 py-1" href="/upload">
+          <i class="bi bi-upload me-1"></i><span class="small">Upload</span>
+        </a>
+        <a class="nav-link text-white-50 px-3 py-1" href="/visualization">
+          <i class="bi bi-eye me-1"></i><span class="small">Visualize</span>
+        </a>
+        <a class="nav-link text-white-50 px-3 py-1" href="/route-creation">
+          <i class="bi bi-plus-square me-1"></i><span class="small">Create</span>
+        </a>
+        <a class="nav-link text-white-50 px-3 py-1" href="/optimization">
+          <i class="bi bi-gear me-1"></i><span class="small">Optimize</span>
+        </a>
+        <a class="nav-link text-white-50 px-3 py-1" href="/service-planning">
+          <i class="bi bi-bar-chart-line me-1"></i><span class="small">Plan</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex align-items-center gap-2">
+      <div class="dropdown d-none d-md-block">
+        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-person-circle me-1"></i>Account
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="/about"><i class="bi bi-info-circle me-2"></i>About</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+        </ul>
+      </div>
+      <a href="/logout" class="btn btn-sm btn-outline-danger d-md-none">
+        <i class="bi bi-box-arrow-right"></i>
+      </a>
+    </div>
   </div>
 </header>

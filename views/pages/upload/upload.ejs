@@ -1,142 +1,288 @@
-<body>
-    <div class="container mt-5">
-        <!-- Message Area with ID -->
-        <% if (message) { %>
-            <div id="feedbackMessage" class="alert <%= message.includes('Error') ? 'alert-danger' : 'alert-success' %> text-center" role="alert">
-                <%= message %>
+<!-- Header Section -->
+<div class="upload-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-8 col-xl-9">
+                <h1 class="page-title">
+                    <i class="bi bi-cloud-upload"></i>
+                    Data Upload Center
+                </h1>
+                <p class="page-subtitle">
+                    Import and manage your transportation data files for network analysis and route optimization
+                </p>
             </div>
-        <% } %>
-
-        <!-- Region Dropdown -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h5 class="card-title">Select Region</h5>
-                <form action="/files" method="GET">
-                    <div class="form-group">
-                        <select class="form-select" name="region" onchange="this.form.submit()">
-                            <option value="" <%= !selectedRegion ? 'selected' : '' %> disabled>Choose a region...</option>
-                            <% regions.forEach(region => { %>
-                                <option value="<%= region %>" <%= selectedRegion === region ? 'selected' : '' %>>
-                                    <%= region %>
-                                </option>
-                            <% }) %>
-                        </select>
+            <div class="col-lg-4 col-xl-3">
+                <% if (selectedRegion) { %>
+                    <div class="text-end">
+                        <div class="small text-muted">Active Region:</div>
+                        <div class="fw-semibold text-primary"><%= selectedRegion %></div>
                     </div>
-                </form>
+                <% } else { %>
+                    <div class="d-flex justify-content-lg-end">
+                        <button class="btn btn-outline-primary" id="helpBtn">
+                            <i class="bi bi-question-circle me-1"></i>
+                            <span class="d-none d-lg-inline">Help</span>
+                        </button>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<body>
+    <div class="row">
+        <!-- Left Panel: Region Selection & Instructions -->
+        <div class="col-md-4">
+            <div style="height: 650px; overflow-y: auto;">
+                <div class="p-3">
+                    <!-- Message Area -->
+                    <% if (message) { %>
+                        <div id="feedbackMessage" class="alert <%= message.includes('Error') ? 'alert-danger' : 'alert-success' %> text-center mb-3" role="alert">
+                            <%= message %>
+                        </div>
+                    <% } %>
+
+                    <!-- Region Selection Card -->
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Select Region</h6>
+                        </div>
+                        <div class="card-body p-3">
+                            <form action="/files" method="GET">
+                                <select class="form-select form-select-sm" name="region" onchange="this.form.submit()">
+                                    <option value="" <%= !selectedRegion ? 'selected' : '' %> disabled>Choose a region...</option>
+                                    <% regions.forEach(region => { %>
+                                        <option value="<%= region %>" <%= selectedRegion === region ? 'selected' : '' %>>
+                                            <%= region %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </form>
+                            <% if (selectedRegion) { %>
+                                <div class="small text-muted mt-2">
+                                    <i class="bi bi-check-circle text-success"></i> Active region: <strong><%= selectedRegion %></strong>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Instructions Card -->
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="bi bi-info-circle"></i> Data Requirements</h6>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="small">
+                                <div class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Transport Files:</strong> Route data (CSV)
+                                </div>
+                                <div class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Mobility Areas:</strong> Coordinate mapping (CSV)
+                                </div>
+                                <div class="mb-2">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Mobility Matrix:</strong> Travel patterns (CSV)
+                                </div>
+                                <div class="text-muted mt-3">
+                                    <i class="bi bi-lightbulb"></i> Files are updated only if changes are detected.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Additional Files Card (moved here from main panel) -->
+                    <% if (selectedRegion && files && (files.transportFiles.length > 0 || files.mobilityAreaFile || files.mobilityMatrixFiles.length > 0)) { %>
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header upload-card-header bg-success text-white">
+                                <h6 class="mb-0"><i class="bi bi-plus-circle"></i> Upload Additional Files</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <form action="/upload" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="region" value="<%= selectedRegion %>">
+                                    <div class="mb-2">
+                                        <label for="transportFilesAdd" class="form-label small fw-bold">Transport Files:</label>
+                                        <input type="file" class="form-control form-control-sm" name="transportFiles" id="transportFilesAdd" accept=".csv" multiple>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="mobilityAreaFileAdd" class="form-label small fw-bold">Mobility Area:</label>
+                                        <input type="file" class="form-control form-control-sm" name="mobilityAreaFile" id="mobilityAreaFileAdd" accept=".csv">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="mobilityMatrixFilesAdd" class="form-label small fw-bold">Mobility Matrix:</label>
+                                        <input type="file" class="form-control form-control-sm" name="mobilityMatrixFiles" id="mobilityMatrixFilesAdd" accept=".csv" multiple>
+                                    </div>
+                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                        <i class="bi bi-upload"></i> Upload Files
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
             </div>
         </div>
 
-        <!-- Dynamic Section -->
-        <% if (selectedRegion) { %>
-            <% if (files && (files.transportFiles.length > 0 || files.mobilityAreaFile || files.mobilityMatrixFiles.length > 0)) { %>
-                <!-- Scenario 1: Region Exists -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Existing Files for <%= selectedRegion %></h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="file-list">
-                            <h6 class="text-muted">Transport Files:</h6>
-                            <ul class="list-group mb-3">
-                                <% files.transportFiles.forEach(file => { %>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <%= file.fileName %>
-                                        <form action="/delete/<%= selectedRegion %>/<%= file._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
-                                            <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
-                                        </form>
-                                    </li>
-                                <% }) %>
-                            </ul>
+        <!-- Main Content Panel -->
+        <div class="col-md-8">
+            <div class="p-3">
+                <% if (selectedRegion) { %>
+                    <% if (files && (files.transportFiles.length > 0 || files.mobilityAreaFile || files.mobilityMatrixFiles.length > 0)) { %>
+                        <!-- Scenario 1: Region Exists with Files -->
+                        <div class="card border-0 shadow mb-4">
+                            <div class="card-header upload-card-header bg-success text-white">
+                                <h6 class="mb-0"><i class="bi bi-folder-check"></i> Existing Files for <%= selectedRegion %></h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="file-list-container" style="max-height: 500px; overflow-y: auto; padding: 1rem;">
+                                <!-- Transport Files Section -->
+                                <div class="mb-4">
+                                    <div class="file-section-header">
+                                        <i class="bi bi-bus text-primary"></i>
+                                        <h6 class="mb-0">Transport Routes</h6>
+                                        <span class="badge bg-primary file-section-badge"><%= files.transportFiles.length %></span>
+                                    </div>
+                                    <% if (files.transportFiles.length > 0) { %>
+                                        <div class="row g-2">
+                                            <% files.transportFiles.forEach(file => { %>
+                                                <div class="col-md-6">
+                                                    <div class="file-item">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div class="file-name">
+                                                                <i class="bi bi-file-earmark-text"></i>
+                                                                <%= file.fileName %>
+                                                            </div>
+                                                            <form action="/delete/<%= selectedRegion %>/<%= file._id %>" method="POST" onsubmit="return confirm('Delete this file?')" class="d-inline">
+                                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <% }) %>
+                                        </div>
+                                    <% } %>
+                                </div>
 
-                            <h6 class="text-muted">Mobility Area Coordinates File:</h6>
-                            <ul class="list-group mb-3">
-                                <% if (files.mobilityAreaFile) { %>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <%= files.mobilityAreaFile.fileName %>
-                                        <form action="/delete/<%= selectedRegion %>/<%= files.mobilityAreaFile._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
-                                            <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
-                                        </form>
-                                    </li>
-                                <% } %>
-                            </ul>
+                                <!-- Mobility Areas Section -->
+                                <div class="mb-4">
+                                    <div class="file-section-header">
+                                        <i class="bi bi-geo-alt text-info"></i>
+                                        <h6 class="mb-0">Mobility Areas</h6>
+                                        <span class="badge bg-info file-section-badge"><%= files.mobilityAreaFile ? 1 : 0 %></span>
+                                    </div>
+                                    <% if (files.mobilityAreaFile) { %>
+                                        <div class="file-item">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="file-name">
+                                                    <i class="bi bi-file-earmark-text"></i>
+                                                    <%= files.mobilityAreaFile.fileName %>
+                                                </div>
+                                                <form action="/delete/<%= selectedRegion %>/<%= files.mobilityAreaFile._id %>" method="POST" onsubmit="return confirm('Delete this file?')" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="empty-state">
+                                            <p class="text-muted small mb-0">No mobility area file uploaded</p>
+                                        </div>
+                                    <% } %>
+                                </div>
 
-                            <h6 class="text-muted">Mobility Matrix Files:</h6>
-                            <ul class="list-group mb-3">
-                                <% files.mobilityMatrixFiles.forEach(file => { %>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <%= file.fileName %>
-                                        <form action="/delete/<%= selectedRegion %>/<%= file._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
-                                            <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
-                                        </form>
-                                    </li>
-                                <% }) %>
-                            </ul>
+                                <!-- Mobility Matrix Section -->
+                                <div class="mb-4">
+                                    <div class="file-section-header">
+                                        <i class="bi bi-grid text-warning"></i>
+                                        <h6 class="mb-0">Mobility Matrix</h6>
+                                        <span class="badge bg-warning file-section-badge"><%= files.mobilityMatrixFiles.length %></span>
+                                    </div>
+                                    <% if (files.mobilityMatrixFiles.length > 0) { %>
+                                        <div class="row g-2">
+                                            <% files.mobilityMatrixFiles.forEach(file => { %>
+                                                <div class="col-md-6">
+                                                    <div class="file-item">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div class="file-name">
+                                                                <i class="bi bi-file-earmark-text"></i>
+                                                                <%= file.fileName %>
+                                                            </div>
+                                                            <form action="/delete/<%= selectedRegion %>/<%= file._id %>" method="POST" onsubmit="return confirm('Delete this file?')" class="d-inline">
+                                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <% }) %>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="empty-state">
+                                            <p class="text-muted small mb-0">No mobility matrix files uploaded</p>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <h5 class="mt-4">Add More Files</h5>
-                        <form action="/upload" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="region" value="<%= selectedRegion %>">
-                            <div class="mb-3">
-                                <label for="transportFiles" class="form-label">Transport Files (CSV):</label>
-                                <input type="file" class="form-control" name="transportFiles" id="transportFiles" accept=".csv" multiple>
-                                <small class="form-text text-muted">Select one or more CSV files</small>
+                    <% } else { %>
+                        <!-- Scenario 2: Region Selected but No Files -->
+                        <div class="card border-0 shadow">
+                            <div class="card-header upload-card-header bg-warning text-dark">
+                                <h6 class="mb-0"><i class="bi bi-exclamation-triangle"></i> New Region: <%= selectedRegion %></h6>
                             </div>
-                            <div class="mb-3">
-                                <label for="mobilityAreaFile" class="form-label">Mobility Area Coordinates File (CSV):</label>
-                                <input type="file" class="form-control" name="mobilityAreaFile" id="mobilityAreaFile" accept=".csv">
-                                <small class="form-text text-muted">Upload one CSV file for area coordinates</small>
-                            </div>
-                            <div class="mb-3">
-                                <label for="mobilityMatrixFiles" class="form-label">Mobility Matrix Files (CSV):</label>
-                                <input type="file" class="form-control" name="mobilityMatrixFiles" id="mobilityMatrixFiles" accept=".csv" multiple>
-                                <small class="form-text text-muted">Select one or more CSV files (e.g., June Mobility, Eid Mobility)</small>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100"><i class="bi bi-upload"></i> Upload Additional Files</button>
-                        </form>
-                    </div>
-                </div>
-            <% } else { %>
-                <!-- Scenario 2: Region Does Not Exist -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0">No data found for <%= selectedRegion %></h5>
-                    </div>
-                    <div class="card-body">
-                        <h5>Upload New Data for <%= selectedRegion %></h5>
-                        <form action="/upload" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="region" value="<%= selectedRegion %>">
-                            <div class="mb-3">
-                                <label for="transportFiles" class="form-label">Transport Files (CSV):</label>
-                                <input type="file" class="form-control" name="transportFiles" id="transportFiles" accept=".csv" multiple required>
-                                <small class="form-text text-muted">Select one or more CSV files</small>
-                            </div>
-                            <div class="mb-3">
-                                <label for="mobilityAreaFile" class="form-label">Mobility Area Coordinates File (CSV):</label>
-                                <input type="file" class="form-control" name="mobilityAreaFile" id="mobilityAreaFile" accept=".csv">
-                                <small class="form-text text-muted">Upload one CSV file for area coordinates</small>
-                            </div>
-                            <div class="mb-3">
-                                <label for="mobilityMatrixFiles" class="form-label">Mobility Matrix Files (CSV):</label>
-                                <input type="file" class="form-control" name="mobilityMatrixFiles" id="mobilityMatrixFiles" accept=".csv" multiple>
-                                <small class="form-text text-muted">Select one or more CSV files (e.g., June Mobility, Eid Mobility)</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-upload"></i> Upload New Files</button>
-                        </form>
-                    </div>
-                </div>
-            <% } %>
-        <% } %>
+                            <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <i class="bi bi-folder-plus fs-1 text-muted"></i>
+                                    <h5 class="mt-2">No data found for this region</h5>
+                                    <p class="text-muted">Upload your first set of files to get started with <%= selectedRegion %></p>
+                                </div>
 
-        <!-- Instructions -->
-        <div class="card shadow-sm instructions">
-            <div class="card-body">
-                <h5 class="card-title">Instructions</h5>
-                <ul class="list-unstyled">
-                    <li><i class="bi bi-check-circle text-success me-2 "></i> <b>Transport Files: </b>Multiple CSV files allowed</li>
-                    <li><i class="bi bi-check-circle text-success me-2 bw-bold"></i><b> Mobility Area Coordinates File: </b> Mobility Area Coordinates File: One CSV file per region</li>
-                    <li><i class="bi bi-check-circle text-success me-2 bw-bold"></i> <b>Mobility Matrix Files: </b>Multiple CSV files allowed (e.g., June Mobility, Eid Mobility)</li>
-                    <li><i class="bi bi-check-circle text-success me-2 bw-bold"></i> <b>Files Updation: </b>Files updated only if changes detected</li>
-                </ul>
+                                <form action="/upload" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="region" value="<%= selectedRegion %>">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="transportFilesNew" class="form-label small fw-bold">Transport Files: <span class="text-danger">*</span></label>
+                                            <input type="file" class="form-control form-control-sm" name="transportFiles" id="transportFilesNew" accept=".csv" multiple required>
+                                            <small class="text-muted">Required: Route data files (CSV)</small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="mobilityAreaFileNew" class="form-label small fw-bold">Mobility Area File:</label>
+                                            <input type="file" class="form-control form-control-sm" name="mobilityAreaFile" id="mobilityAreaFileNew" accept=".csv">
+                                            <small class="text-muted">Optional: Area coordinates (CSV)</small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="mobilityMatrixFilesNew" class="form-label small fw-bold">Mobility Matrix:</label>
+                                            <input type="file" class="form-control form-control-sm" name="mobilityMatrixFiles" id="mobilityMatrixFilesNew" accept=".csv" multiple>
+                                            <small class="text-muted">Optional: Travel patterns (CSV)</small>
+                                        </div>
+                                        <div class="col-md-6 d-flex align-items-end">
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="bi bi-upload"></i> Create Region
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <!-- No Region Selected -->
+                    <div class="card border-0 shadow">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-geo-alt fs-1 text-muted mb-3"></i>
+                            <h5 class="text-muted">Select a Region to Get Started</h5>
+                            <p class="text-muted mb-0">Choose a region from the dropdown to view existing files or upload new data.</p>
+                        </div>
+                    </div>
+                <% } %>
             </div>
         </div>
     </div>
@@ -150,7 +296,7 @@
                     setTimeout(() => {
                         messageDiv.remove();
                     }, 500);
-                }, 1500);
+                }, 3000); // Extended to 3 seconds for better visibility
             }
         });
     </script>

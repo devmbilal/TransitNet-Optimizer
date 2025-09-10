@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="/css/upload.css" />
     <link rel="stylesheet" href="/css/visualization.css" />
     <link rel="stylesheet" href="/css/routeCreation.css" />
+    <link rel="stylesheet" href="/css/about-light.css" />
     <% if (typeof locals !== 'undefined' && locals.pageName === 'Route Optimization') { %>
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
       <link rel="stylesheet" href="/css/optimization.css" />
@@ -47,7 +48,9 @@
     <div class="container-fluid">
       <div class="row">
         <%- include('../partials/sidebar.ejs') %>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4"><%- body %></main>
+        <main class="col-md-9 ms-sm-auto col-lg-10 p-0" style="background-color: #f8f9fa;">
+          <div class="content-wrapper" style="min-height: calc(100vh - 56px);"><%- body %></div>
+        </main>
       </div>
     </div>
     <!-- Bootstrap JS Bundle -->
@@ -74,5 +77,27 @@
     <% if (typeof locals !== 'undefined' && locals.pageName === 'Service Planning') { %>
       <script src="/js/servicePlanning.js"></script>
     <% } %>
+    
+    <!-- Initialize sidebar visibility -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Ensure sidebar is visible on desktop
+        const sidebar = document.getElementById('sidebarMenu');
+        if (sidebar && window.innerWidth >= 768) {
+          sidebar.classList.add('show');
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+          if (sidebar) {
+            if (window.innerWidth >= 768) {
+              sidebar.classList.add('show');
+            } else {
+              sidebar.classList.remove('show');
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>
