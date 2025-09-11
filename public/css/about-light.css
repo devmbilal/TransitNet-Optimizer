@@ -105,6 +105,74 @@
     margin-bottom: 0;
 }
 
+/* Purpose and Workflow Cards */
+.purpose-card, .workflow-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.purpose-header, .workflow-header {
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.purpose-card p, .workflow-card p {
+    padding: 0.75rem 1rem;
+    margin: 0;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.workflow-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.workflow-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    transition: background-color 0.2s ease;
+}
+
+.workflow-list li:last-child {
+    border-bottom: none;
+}
+
+.workflow-list li:hover {
+    background-color: #f8fafc;
+}
+
+.step-dot {
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.purpose-header i, .workflow-header i {
+    font-size: 1rem;
+}
+
 /* Features Grid */
 .features-grid {
     display: grid;

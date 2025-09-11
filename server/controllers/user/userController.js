@@ -7,12 +7,23 @@ const signUp = async (req, res) => {
 };
 
 const postSignUp = async (req, res) => {
-    const { name, email, password, userType, organization } = req.body;
+    const { name, email, password, userType, organization, adminUsername, adminPassword } = req.body;
 
-    if (!name || !email || !password || !userType) {
+    if (!name || !email || !password || !userType || !adminUsername || !adminPassword) {
         return res.render("pages/auth/signup", { 
             layout: false, 
-            error: "Please provide all required fields" 
+            error: "Please provide all required fields including admin credentials" 
+        });
+    }
+
+    // Admin credentials validation
+    const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+    
+    if (adminUsername !== ADMIN_USERNAME || adminPassword !== ADMIN_PASSWORD) {
+        return res.render("pages/auth/signup", { 
+            layout: false, 
+            error: "Invalid admin credentials. User creation is restricted to administrators only." 
         });
     }
 
@@ -110,10 +121,10 @@ const allLogin = async (req, res) => {
 
             res.redirect(`/upload`);
         } catch (error) {
-            
+            console.error('Login error:', error);
             res.render("pages/auth/login", { 
                 layout: false, 
-                error: "Login failed due to a server error" 
+                error: "Login failed due to a server error: " + error.message 
             });
         }
     }

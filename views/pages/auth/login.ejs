@@ -25,15 +25,16 @@
       body {
         font-family: "Poppins", sans-serif;
         margin: 0;
-        overflow: hidden;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+        background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #45b7d1 50%, #96ceb4 75%, #ffeaa7 100%);
         background-size: 400% 400%;
         animation: gradientShift 15s ease infinite;
         color: #fff;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        min-height: 100vh;
+        padding: 20px 0;
       }
       
       @keyframes gradientShift {
@@ -131,21 +132,24 @@
       }
 
       input[type="submit"] {
-        background-color: #f5c518;
-        color: #1a3c5e;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: #ffffff;
         border: none;
         padding: 14px;
-        border-radius: 20px;
+        border-radius: 8px;
         cursor: pointer;
         font-size: 16px;
         font-weight: 600;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
         width: 100%;
         font-family: "Poppins", sans-serif;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
       }
 
       input[type="submit"]:hover {
-        background-color: #e0b015;
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
       }
 
       @keyframes fadeIn {
@@ -198,7 +202,7 @@
   <body>
     <div class="login-container" style="display:flex; gap:0; max-width:980px; width:100%; padding:0; border-radius:14px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.25)">
       <!-- Brand panel -->
-      <div style="flex:1; background: linear-gradient(135deg, rgba(13,110,253,0.95) 0%, rgba(32,201,151,0.90) 30%, rgba(255,193,7,0.85) 70%, rgba(220,53,69,0.90) 100%), radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%); color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px; position:relative; overflow:hidden;">
+      <div style="flex:1; background: linear-gradient(135deg, rgba(255,107,107,0.95) 0%, rgba(78,205,196,0.90) 30%, rgba(69,183,209,0.85) 70%, rgba(150,206,180,0.90) 100%), radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(255,255,255,0.08) 0%, transparent 50%); color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px; position:relative; overflow:hidden;">
         <div style="font-size:46px; font-weight:700; letter-spacing:0.5px; display:flex; align-items:center; gap:12px;">
           <i class="fas fa-route"></i>
           TransitNet
@@ -249,6 +253,22 @@
             <input type="submit" id="submit" value="Sign In" />
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Institutional Logos Footer -->
+    <div style="margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 40px; opacity: 0.9;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <img src="/logos/cs-logo.png" alt="CS Department" style="height: 50px; background: white; padding: 8px; border-radius: 8px;">
+        <span style="font-size: 10px; color: #000000; text-align: center; font-weight: 500;">Dept. of Computer Science<br>QAU Islamabad</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <img src="/logos/cda-logo.png" alt="CDA" style="height: 50px; background: white; padding: 8px; border-radius: 8px;">
+        <span style="font-size: 10px; color: #000000; text-align: center; font-weight: 500;">Capital Development<br>Authority</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <img src="/logos/RoadSafetyLogo.png" alt="Road Safety" style="height: 50px; background: white; padding: 8px; border-radius: 8px;">
+        <span style="font-size: 10px; color: #000000; text-align: center; font-weight: 500;">Road Safety Project<br>GCF-744</span>
       </div>
     </div>
 

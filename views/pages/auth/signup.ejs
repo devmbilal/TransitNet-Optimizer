@@ -141,21 +141,24 @@
       }
 
       input[type="submit"] {
-        background-color: #f5c518;
-        color: #1a3c5e;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: #ffffff;
         border: none;
         padding: 12px;
-        border-radius: 20px;
+        border-radius: 8px;
         cursor: pointer;
         font-size: 16px;
         font-weight: 600;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
         width: 100%;
         font-family: "Poppins", sans-serif;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
       }
 
       input[type="submit"]:hover {
-        background-color: #e0b015;
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
       }
 
       .form-options {
@@ -268,6 +271,23 @@
             <input type="password" id="password" name="password" required autocomplete="off" placeholder="Enter your password" />
             <i class="fas fa-lock icon" id="togglePassword"></i>
           </div>
+          
+          <!-- Admin Credentials Section -->
+          <div style="border-top: 1px solid #e0e0e0; margin: 20px 0; padding-top: 20px;">
+            <h6 style="color: #1a3c5e; margin-bottom: 15px; font-size: 14px; font-weight: 600;">Admin Authorization Required</h6>
+            <div class="form-group-row">
+              <div class="form-group" style="flex: 1">
+                <label for="adminUsername">Admin Username:</label>
+                <input type="text" id="adminUsername" name="adminUsername" required autocomplete="off" placeholder="Enter admin username" />
+                <i class="fas fa-user-shield icon"></i>
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label for="adminPassword">Admin Password:</label>
+                <input type="password" id="adminPassword" name="adminPassword" required autocomplete="off" placeholder="Enter admin password" />
+                <i class="fas fa-key icon" id="toggleAdminPassword"></i>
+              </div>
+            </div>
+          </div>
           <div class="form-group-row">
             <div class="form-group" style="flex: 1">
               <label for="userType">User Type:</label>
@@ -291,6 +311,7 @@
         </form>
       </div>
     </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("form");
@@ -305,6 +326,20 @@
             passwordInput.type = "password";
             this.classList.remove("fa-lock-open");
             this.classList.add("fa-lock");
+          }
+        });
+
+        // Admin password toggle
+        document.getElementById("toggleAdminPassword").addEventListener("click", function () {
+          const adminPasswordInput = document.getElementById("adminPassword");
+          if (adminPasswordInput.type === "password") {
+            adminPasswordInput.type = "text";
+            this.classList.remove("fa-key");
+            this.classList.add("fa-key"); // Keep same icon for admin
+          } else {
+            adminPasswordInput.type = "password";
+            this.classList.remove("fa-key");
+            this.classList.add("fa-key");
           }
         });
 
